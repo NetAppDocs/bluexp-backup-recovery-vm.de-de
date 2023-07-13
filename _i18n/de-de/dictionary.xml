@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blocks>
+  <block id="ad91d6e1b981614b514c3c61b0ee65d6" category="summary">BlueXP Backup und Recovery für Virtual Machines auf Amazon FSX:</block>
+  <block id="33d898814cf484610ac330ca02a84bf1" category="doc">BlueXP Backup und Recovery für VMs – Dokumentation</block>
+  <block id="63fd03a49eb1b8cee419487f40c1c640" category="summary">Bevor Sie VMs sichern oder wiederherstellen können, müssen Sie „Amazon FSX for NetApp ONTAP“ oder „Amazon FSX for NetApp ONTAP SVM“ als Storage-System hinzufügen. Durch Hinzufügen von Storage können BlueXP Backup und Recovery für VMs Backup- und Restore-Vorgänge in vCenter erkennen und managen.</block>
+  <block id="6888e60d18ef291e7b86bc7e530fe2a8" category="doc">Erweitern Sie Ihren Storage</block>
+  <block id="135b308ed83c53f1516b7c754566d1c4" category="paragraph-title">Bevor Sie beginnen</block>
+  <block id="11db09e52e3f95807370d6474395dd1d" category="paragraph">Der ESXi Server, das BlueXP Backup und Recovery für VMs und jedes vCenter müssen zur gleichen Zeit synchronisiert werden. Wenn Sie versuchen, Speicher hinzuzufügen, aber die Zeiteinstellungen für Ihre vCenters nicht synchronisiert sind, schlägt der Vorgang möglicherweise mit einem Java-Zertifikatfehler fehl.</block>
+  <block id="bbe48fb854ea022537208eeeff822f91" category="paragraph-title">Über diese Aufgabe</block>
+  <block id="84628fc1d27c48d8dcd6599f4df80303" category="paragraph">BlueXP Backup und Recovery für VMs führen Backup- und Restore-Vorgänge auf direkt verbundenen Storage-VMs und auf Storage-VMs in einem Storage-Cluster durch.</block>
+  <block id="1854db6915a69cc8e0521d1b8e0933e6" category="list-text">Die Namen für Storage VMs müssen für das Management LIFs aufgelöst werden.</block>
+  <block id="348417f253bbf297603d548c58260619" category="paragraph">Wenn Sie etc Host-Einträge für Storage-VM-Namen in BlueXP Backup und Recovery für VMs hinzugefügt haben, müssen Sie überprüfen, ob diese auch von der virtuellen Appliance lösbar sind.</block>
+  <block id="5e89455802b490325e8b5de5d2e292f0" category="paragraph">Wenn Sie eine Storage-VM mit einem Namen hinzufügen, der nicht zur Management-LIF auflöst, schlagen geplante Backup-Jobs fehl, da das Plug-in keine Datenspeicher oder Volumes auf dieser Storage-VM finden kann. Wenn dies geschieht, fügen Sie die Storage VM entweder zu BlueXP Backup und Recovery für VMs hinzu und geben Sie die Management-LIF an, oder fügen Sie ein Cluster hinzu, das die Storage-VM enthält, und geben Sie die Cluster-Management-LIF an.</block>
+  <block id="21b98222ac31571d620d0f173e2dc390" category="list-text">Die Details zur Storage-Authentifizierung werden nicht zwischen mehreren Instanzen von BlueXP Backup und Recovery für VMs oder zwischen Windows SnapCenter Server und BlueXP Backup und Recovery für VMs unter vCenter ausgetauscht.</block>
+  <block id="f3a29486bed19a90f2da6d007818b427" category="list-title">Schritte</block>
+  <block id="f97c1a1d745c01091fed7d45a3c6e8d1" category="list-text">Klicken Sie im linken Navigator-Bereich des vSphere-Clients auf *Storage Systems*.</block>
+  <block id="5eb6024701b8aff71a94567d88cbcfaf" category="list-text">Klicken Sie auf der Seite Speichersysteme auf *Hinzufügen*.</block>
+  <block id="d41d8cd98f00b204e9800998ecf8427e" category="inline-image-macro"></block>
+  <block id="4538d237be8cb4764e12c71d417cddb2" category="paragraph"><block ref="4538d237be8cb4764e12c71d417cddb2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="82a67865bc4fe175c8c93e77015108b9" category="list-text">Geben Sie im *Add Storage System* Wizard die grundlegenden Speicher-VM- oder Cluster-Informationen ein.</block>
+  <block id="644127ba6378708209cd3cd7be726b74" category="list-text">Wählen Sie die Authentifizierungsmethode *Anmeldeinformationen* aus und melden Sie sich als Amazon FSX Administrator an.</block>
+  <block id="7dee7e783d13b6d5d415926ce0bfc306" category="list-text">Klicken Sie Auf *Hinzufügen*.</block>
+  <block id="68db6c72e1ca65960795aee487114a61" category="paragraph">Wenn Sie ein Storage-Cluster hinzugefügt haben, werden alle Storage-VMs in diesem Cluster automatisch hinzugefügt. Automatisch hinzugefügte Speicher-VMs (manchmal auch „implizite“ Speicher-VMs genannt) werden auf der Cluster-Übersichtsseite mit einem Bindestrich (-) anstelle eines Benutzernamens angezeigt. Benutzernamen werden nur für explizite Speichereinheiten angezeigt.</block>
+  <block id="20dbe7e0dd0012ef2ae377097de8cdd8" category="summary">Bevor Sie das Backup und Recovery von VMs für VMs mit BlueXP nutzen, müssen Sie Backup-Richtlinien erstellen.</block>
+  <block id="8e76505b54822d8003db9695ebc8dded" category="doc">Erstellen von Backup-Richtlinien für VMs und Datastores</block>
+  <block id="271beae8f11b01c3f45767fc1bd5c1a9" category="list-text">Sie müssen die Voraussetzungen gelesen haben.</block>
+  <block id="020c68712d58d0c6ae79d6422851ae45" category="list-text">Sie müssen sekundäre Storage-Beziehungen konfiguriert haben.</block>
+  <block id="06e3c2a5372f8d3d86877d169badf325" category="list-text">Wenn Sie Snapshot Kopien auf einen gespiegelten oder sekundären Vault-Storage replizieren, müssen die Beziehungen konfiguriert sein. Der SnapCenter Administrator muss Ihnen die Storage-VMs sowohl für die Quell- als auch die Ziel-Volumes zugewiesen haben.</block>
+  <block id="fe693831347b037af8a5d8babd163c2e" category="list-text">Um Snapshot-Kopien für Versionen-FlexibleMirror Beziehungen auf einem NFS-Datastore erfolgreich in den sekundären Storage zu übertragen, stellen Sie sicher, dass der SnapMirror-Richtlinientyp „Asynchronous Mirror“ ist und dass die Option „all_source_Snapshots“ aktiviert ist.</block>
+  <block id="b3f67a94ed7b9ba31bd2698489179f27" category="list-text">Wenn die Anzahl der Snapshot-Kopien auf dem sekundären Storage (Mirror-Vault) das Maximum erreicht, schlägt die Aktivität zur Registrierung von Backups und Anwendung der Aufbewahrung im Backup-Vorgang mit der folgenden Fehlermeldung fehl: Diese Snapshot-Kopie wird derzeit von einer oder mehreren SnapMirror Beziehungen als Referenz-Snapshot-Kopie verwendet. Das Löschen der Snapshot Kopie kann dazu führen, dass zukünftige SnapMirror Vorgänge fehlschlagen.</block>
+  <block id="7cb7ec638ee3f628b5dd7b29b735054f" category="paragraph">Um dieses Problem zu beheben, konfigurieren Sie die SnapMirror Aufbewahrungsrichtlinie für den sekundären Storage, um das maximale Limit von Snapshot Kopien zu vermeiden.</block>
+  <block id="afb53cfa3120d45d1a3d76236dda1012" category="list-text">Wenn Sie VM-konsistente Backups wünschen, müssen VMware Tools installiert und ausgeführt werden. Zum Stilllegen von VMs sind VMware Tools erforderlich.</block>
+  <block id="1b29ba4e6cf39ab8317f76076c2baeed" category="list-text">Klicken Sie im linken Navigator-Bereich von BlueXP Backup und Recovery für VMs auf *Richtlinien*.</block>
+  <block id="2be9030b1634912139eaab40b3092dce" category="list-text">Klicken Sie auf der Seite *Policies* auf *Create*, um den Assistenten zu starten.
+<block ref="906916a1f3ea00481784d2dcf7dafe3d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f9537d47a4839ca02a4ca9726157e701" category="list-text">Wählen Sie auf der Seite *New Backup Policy* den VMC auf AWS aus, der die Richtlinie verwendet, und geben Sie dann den Richtliniennamen und eine Beschreibung ein.</block>
+  <block id="9efc9e0c08da510b5195bb9dc4b1b7c2" category="list-text">Nicht unterstützte Zeichen</block>
+  <block id="69a02b2d668a0ebee1d9ac100a00074c" category="paragraph">Verwenden Sie nicht die folgenden Sonderzeichen in VMs, Datenspeicher, Cluster, Richtlinien, Backups, Oder Ressourcengruppennamen: % &amp; * € # @ ! \ / : * ? " &lt; &gt; - ; ' , .</block>
+  <block id="9269e051e7bd31dcb56553a7f11183a2" category="paragraph">Ein Unterstrich (_) ist zulässig.
+<block ref="6648fd21234a7ed16d280775be5d73d3" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a923c6bf503ee78e9fc4b4479248cff6" category="list-text">Legen Sie die Aufbewahrungseinstellungen fest.</block>
+  <block id="2eff7650afc7423cc6df7c21eaaf0430" category="paragraph">Sie sollten den Aufbewahrungswert auf 2 Backups oder höher einstellen, wenn Sie die SnapVault-Replikation aktivieren möchten. Wenn Sie die Aufbewahrungsanzahl auf 1 Backup gesetzt haben, kann der Aufbewahrungsvorgang fehlschlagen. Dies liegt daran, dass die erste Snapshot Kopie die Referenzkopie für die SnapVault-Beziehung ist, bis die neuere Snapshot Kopie auf das Ziel repliziert wird.</block>
+  <block id="6e0b19728555d1c2b7bc98ce7895aced" category="list-text">Geben Sie die Frequenzeinstellungen an.</block>
+  <block id="52b19e85e6a29b6fe5690f47944f859f" category="paragraph">Die Richtlinie gibt nur die Backup-Häufigkeit an. Der spezifische Schutzzeitplan für das Sichern ist in der Ressourcengruppe festgelegt. Daher können zwei oder mehr Ressourcengruppen dieselbe Richtlinien- und Backup-Häufigkeit teilen, jedoch unterschiedliche Backup-Pläne haben.</block>
+  <block id="352857d99c458903c7aae23409a114d5" category="list-text">Geben Sie in den Feldern *Replikation* den Replikationstyp auf sekundären Speicher an, wie in der folgenden Tabelle dargestellt:</block>
+  <block id="ca992da0d36b851405bbef3bf1544e14" category="cell">Für dieses Feld…</block>
+  <block id="aeb7716438e30f2a23e6f50ba16352b4" category="cell">Do this…</block>
+  <block id="fa23470db7b9905492d6e4cdd14b03e5" category="paragraph">Aktualisierung von SnapMirror nach dem Backup</block>
+  <block id="a7352564cfc3174fc18763ada4c4e33e" category="paragraph">Wählen Sie diese Option aus, um Spiegelkopien von Backup-Sets auf einem anderen Volume zu erstellen, das über eine SnapMirror Beziehung zum primären Backup Volume verfügt.
+Wenn ein Volume mit einer Mirror-Vault-Beziehung konfiguriert ist, müssen Sie nur die Option *Update SnapVault after Backup* auswählen, wenn Sie Backups auf die Mirror-Vault Ziele kopieren möchten.</block>
+  <block id="449ebe6b7b153c1de3b22c54152f11dd" category="paragraph">Diese Option wird für Datastores in FlexGroup Volumes im SnapCenter Plug-in für VMware vSphere 4.5 und höher unterstützt.</block>
+  <block id="05c92158f412c4a911e0b21a09762bf2" category="paragraph">SnapVault nach Backup aktualisieren</block>
+  <block id="7f7a2015d521bd1848a92d266cd3fae5" category="paragraph">Wählen Sie diese Option aus, um Disk-to-Disk Backup-Replikation auf einem anderen Volume mit einer SnapVault-Beziehung zum primären Backup Volume durchzuführen.</block>
+  <block id="ec9a0601ee927cc668ce79eac801b520" category="paragraph">Wenn ein Volume mit einer Mirror-Vault-Beziehung konfiguriert ist, müssen Sie nur diese Option auswählen, wenn Sie Backups auf die Mirror-Vault Ziele kopieren möchten.</block>
+  <block id="765c798c0aa1aec3ca7ca68ec68f7e28" category="paragraph">Snapshot-Etikett</block>
+  <block id="b96b0586842e6c7544966f830118b637" category="paragraph">Geben Sie ein optionales, benutzerdefiniertes Label ein, das zu SnapVault und SnapMirror Snapshot Kopien hinzugefügt werden soll, die mit dieser Richtlinie erstellt werden.
+Das Snapshot-Label hilft, mit dieser Richtlinie erstellte Snapshots von anderen Snapshots auf dem sekundären Storage-System zu unterscheiden.</block>
+  <block id="97b7176ff6062e6fac08db2a54668272" category="paragraph">Für Etiketten der Snapshot Kopien sind maximal 31 Zeichen zulässig.</block>
+  <block id="3c470c222c149a078de44686443ab4cf" category="list-text">*Optional*: Wählen Sie in den erweiterten Feldern die benötigten Felder aus. In der folgenden Tabelle sind die Details zum Advanced Field Portal aufgeführt.</block>
+  <block id="a7ef08fff5cdd9899a1574f69f5c4428" category="paragraph">VM-Konsistenz</block>
+  <block id="c5622748b0dae394073783566c4253de" category="paragraph">Aktivieren Sie dieses Kontrollkästchen, um die VMs stillzulegen und jedes Mal, wenn der Backup-Job ausgeführt wird, einen VMware-Snapshot zu erstellen.</block>
+  <block id="5fe139943a50a82fa435d79d3988038a" category="paragraph">Sie müssen VMware Tools auf der VM ausführen, um VM-konsistente Backups durchzuführen. Wenn VMware Tools nicht ausgeführt wird, wird stattdessen ein absturzkonsistentes Backup durchgeführt.</block>
+  <block id="d619892da7c9e176ad3a4bb3414fcef1" category="paragraph">Wenn Sie das Kontrollkästchen für die Konsistenz der VM aktivieren, können Backup-Vorgänge länger dauern und mehr Speicherplatz benötigen. In diesem Szenario werden die VMs zuerst stillgelegt, dann führt VMware einen VM-konsistenten Snapshot durch, dann führt SnapCenter seinen Backup-Vorgang durch und anschließend werden die VM-Vorgänge wieder aufgenommen.</block>
+  <block id="fe8e8bb4e4841e4b613a335eb4397fa6" category="paragraph">Der VM-Gastspeicher ist nicht in den Konsistenz-Snapshots der VMs enthalten.</block>
+  <block id="5b5f807a09f098321a7b30d765219c05" category="paragraph">Einbeziehen von Datastores mit unabhängigen Festplatten</block>
+  <block id="495ad64d2a6a40cfac27d689d4edd34b" category="paragraph">Aktivieren Sie dieses Kontrollkästchen, um alle Datenspeicher mit unabhängigen Festplatten, die temporäre Daten enthalten, in das Backup einzubeziehen.</block>
+  <block id="a83f1ca5ad00b39773d9e6a26b0e70b2" category="paragraph">Skripte</block>
+  <block id="38e0c62f029f528b565802759f84d383" category="paragraph">Geben Sie den vollständig qualifizierten Pfad des Prescript oder Postscript ein, das das SnapCenter VMware Plug-in vor oder nach dem Backup ausführen soll. Sie können beispielsweise ein Skript ausführen, um SNMP-Traps zu aktualisieren, Warnmeldungen zu automatisieren und Protokolle zu senden. Der Skriptpfad wird zum Zeitpunkt der Ausführung des Skripts validiert.</block>
+  <block id="7e3f0e5af0f3deb2b599c2b06c202c37" category="paragraph">Prescripts und Postscripts müssen auf der VM der virtuellen Appliance liegen. Um mehrere Skripts einzugeben, drücken Sie nach jedem Skriptpfad die Eingabetaste, um jedes Skript in einer separaten Zeile aufzulisten. Das Zeichen „;“ ist nicht zulässig.</block>
+  <block id="0e966e38f37db4fe0a9b1d6f014e044c" category="paragraph">Sie können die Erstellung der Richtlinie überprüfen und die Richtlinienkonfiguration überprüfen, indem Sie die Richtlinie auf der Seite Richtlinien auswählen.</block>
+  <block id="0a5120b477a12d0b58555a4a46c5269c" category="summary">Nicht unterstützte Workflows</block>
+  <block id="9a2e882799cd282a6f2f040bce700bee" category="paragraph">Die folgenden Workflows werden in BlueXP Backup und Recovery für die Versionen 1.0 von VMs nicht unterstützt:</block>
+  <block id="10cbe957e96580adb586e243ca93b19f" category="list-text">Anschließen und Trennen von VMDKs</block>
+  <block id="839409625f4f63a1b0569b87b727b253" category="list-text">Mounten und Unmounten von Datastores</block>
+  <block id="6d74a680eadd149117f584cf67b83c34" category="list-text">Wiederherstellung von Gastdateien und Ordnern</block>
+  <block id="e3ce20e84d792df542d9625df767d605" category="list-text">An alternativen Speicherort wiederherstellen</block>
+  <block id="b3559f665aa2ce07e02e3a58d4dbcc1c" category="list-text">Fügen Sie mithilfe der Authentifizierungsmethode „Zertifikat“ ein Speichersystem hinzu</block>
+  <block id="ec2690fa612571dacaeedc2cc2bb4fb6" category="list-text">Fügen Sie NetApp ONTAP FlexGroup Volumes hinzu</block>
+  <block id="e81fe1cc9509490f8ba5ec5636cb754e" category="summary">Zum Schutz von VMs, Datastores und applikationskonsistenten Datenbanken auf virtualisierten Maschinen müssen Sie BlueXP Backup- und Recovery-Lösungen für VMs implementieren.</block>
+  <block id="4af3639e7f4fffc8b4fcc219b968cc03" category="doc">Implementieren Sie BlueXP Backup und Recovery für VMs</block>
+  <block id="70a3b011bedc6fad937d187700969443" category="paragraph">++++</block>
+  <block id="8fd291ad60a03fee9a1ee7e664474efb" category="paragraph">Die OVA-Bereitstellung wird in VMware vCenter 8.0 und höher unterstützt.</block>
+  <block id="d59a15e753c2787c0b1006e6c681e3d8" category="list-text">Sie müssen die Implementierungsanforderungen gelesen haben.</block>
+  <block id="a9760771f4dac75a237b0b95e23b2804" category="list-text">Sie müssen eine unterstützte Version von VMC auf AWS ausführen.</block>
+  <block id="b778ffe29ad16f2f9fea1b78e3afde09" category="list-text">Sie müssen Ihre VMC on AWS-Umgebung konfiguriert und eingerichtet haben.</block>
+  <block id="af385a0f60b4b8d21fb7da3e73bc1601" category="list-text">Sie müssen einen ESXi Host für das Backup und Recovery für VMs von BlueXP eingerichtet haben.</block>
+  <block id="91e9d3a887ef8fe897c7d2db6b95249f" category="list-text">Sie müssen das BlueXP Backup und Recovery für VMs herunterladen<block ref="58963a595c988dc6f693cb3238dc907a" prefix=" " category="inline-code"></block> Datei:</block>
+  <block id="95ff0b130af729d4a1d7d76be6a9f1ef" category="list-text">Sie müssen über die Details zur Anmeldeauthentifizierung für Ihre VMC on AWS Instanz verfügen.</block>
+  <block id="1ac228dd82997c534998d8c776a81009" category="list-text">Sie müssen über ein Zertifikat mit gültigen öffentlichen und privaten Schlüssel-Dateien verfügen. Weitere Informationen finden Sie in den Artikeln unter Speicherzertifikatverwaltung.</block>
+  <block id="78dd2db401a1c567e4094c34da3d53e3" category="list-text">Sie müssen alle Browser-Sessions des vSphere Clients abgemeldet und geschlossen haben und den Browser-Cache gelöscht haben, um Probleme im Browser-Cache bei der Implementierung von BlueXP Backup und Recovery für VMs zu vermeiden.</block>
+  <block id="8ba7fa3d7ed705b172a2802a36085538" category="list-text">In vCenter müssen Sie Transport Layer Security (TLS) aktivieren. Lesen Sie die VMware-Dokumentation.</block>
+  <block id="d706d30254764a674cce32eb658463b4" category="paragraph">Implementieren Sie BlueXP Backup und Recovery für VMs in derselben Zeitzone wie vCenter.</block>
+  <block id="60fef4f382ecd40d07aa6f5d88accaa7" category="list-text">Führen Sie für VMware vCenter 7.0.3 und neuere Versionen die Schritte im Abschnitt Open Virtual Appliance (OVA) herunterladen aus, um die Zertifikate in vCenter zu importieren.</block>
+  <block id="9e6343514537d0d6a99bafe616c5aa86" category="list-text">Navigieren Sie in Ihrem Browser zu VMware vSphere vCenter.</block>
+  <block id="a5bc2dcdf45e4e981e8c5477447aa605" category="list-text">Melden Sie sich auf der Seite *VMware vCenter Single Sign-On an*.</block>
+  <block id="ad4893b9eae679e233b663b06f44d8af" category="list-text">Klicken Sie im Navigator-Fenster mit der rechten Maustaste auf ein Inventory-Objekt, das ein gültiges übergeordnetes Objekt einer virtuellen Maschine ist, z. B. ein Rechenzentrum, Cluster oder Host, und wählen Sie *OVF-Vorlage bereitstellen* aus, um den VMware Deploy Wizard zu starten.</block>
+  <block id="17b94924b62d3d2218aa4d42b17aa068" category="list-text">Extrahieren Sie die<block ref="58963a595c988dc6f693cb3238dc907a" prefix=" " category="inline-code"></block> Datei, die die enthält<block ref="8d8b01a4d628953e7a2225813c8edb3f" prefix=" " category="inline-code"></block> Auf Ihrem lokalen System speichern. Geben Sie auf der Seite *Wählen Sie eine OVF-Vorlage* den Speicherort des an<block ref="8d8b01a4d628953e7a2225813c8edb3f" prefix=" " category="inline-code"></block> In der Datei<block ref="58963a595c988dc6f693cb3238dc907a" prefix=" " category="inline-code"></block> Extrahierter Ordner.</block>
+  <block id="5a378b18f7bf0c4cabc6c655cd2f535e" category="list-text">Klicken Sie Auf *Weiter*.</block>
+  <block id="796f03d0e85998488ac1646dc2223f74" category="list-text">Geben Sie auf der Seite *Name und Ordner* einen eindeutigen Namen für die VM oder vApp ein, und wählen Sie einen Speicherort für die Bereitstellung aus, und klicken Sie dann auf *Weiter*.</block>
+  <block id="120eae940d81b5db30f7ab4bb98355e0" category="paragraph">In diesem Schritt wird festgelegt, wo der importiert werden soll<block ref="8d8b01a4d628953e7a2225813c8edb3f" prefix=" " category="inline-code"></block> Datei in vCenter. Der Standardname für die VM entspricht dem Namen der ausgewählten<block ref="8d8b01a4d628953e7a2225813c8edb3f" prefix=" " category="inline-code"></block> Datei: Wenn Sie den Standardnamen ändern, wählen Sie einen eindeutigen Namen in jedem VMC in AWS VM-Ordner aus.</block>
+  <block id="610a764205314eed9d2cb112d7d4fe17" category="paragraph">Der Standardbereitstellungs-Speicherort für die VM ist das Inventurobjekt, an dem Sie den Assistenten gestartet haben.</block>
+  <block id="fd38bfaa138a173dbe8f06d29d48ca2d" category="list-text">Wählen Sie auf der Seite *Select a Resource* die Ressource aus, auf der Sie die bereitgestellte VM-Vorlage ausführen möchten, und klicken Sie auf *Next*.</block>
+  <block id="e3e1c25431fc2379a565e59898f94d07" category="list-text">Überprüfen Sie auf der Seite * Details* die<block ref="8d8b01a4d628953e7a2225813c8edb3f" prefix=" " category="inline-code"></block> Vorlagendetails und klicken Sie auf *Weiter*.</block>
+  <block id="636c2e0b88f6a682d77d3838726c2fe8" category="list-text">Aktivieren Sie auf der Seite *Lizenzvereinbarungen* das Kontrollkästchen für *Ich akzeptiere alle Lizenzvereinbarungen*.</block>
+  <block id="703b009db2355e8887ba2886f86ab2ec" category="list-text">Legen Sie auf der Seite * Storage auswählen* fest, wo und wie die Dateien für die bereitgestellte OVF-Vorlage gespeichert werden sollen.</block>
+  <block id="55cce6bfbb9d17ae1682863fc7a7764b" category="list-text">Wählen Sie das Festplattenformat für die VMDKs aus.</block>
+  <block id="7a9c01639c2cc1523a8c14bd0e5ba33f" category="list-text">Wählen Sie eine VM-Speicherrichtlinie aus.</block>
+  <block id="a7d21e52dac9a32dd6c0969d21e58f5d" category="paragraph">Diese Option ist nur verfügbar, wenn Storage-Richtlinien auf der Zielressource aktiviert sind.</block>
+  <block id="641242495bc9253884a3edaa25cef822" category="list-text">Wählen Sie einen Datenspeicher aus, um die implementierte OVA-Vorlage zu speichern.</block>
+  <block id="81deefee239e2e910af613e15d3fa5b0" category="paragraph">Die Konfigurationsdatei und die Dateien virtueller Laufwerke werden auf dem Datastore gespeichert.</block>
+  <block id="cf76b59c919d783c77b9e239f7f36a14" category="paragraph">Wählen Sie einen Datenspeicher aus, der ausreichend groß ist, um die virtuelle Maschine oder vApp und alle zugehörigen virtuellen Festplattendateien aufzunehmen.</block>
+  <block id="19a2f9999bcfa76b2522efb93c48ee86" category="list-text">Gehen Sie auf der Seite *Netzwerke auswählen* wie folgt vor:</block>
+  <block id="ac072e04e003db352f1a51a7bc9b9b18" category="list-text">Wählen Sie ein Quellnetzwerk aus, und ordnen Sie es einem Zielnetzwerk zu.</block>
+  <block id="651433d5ff599464dd5066cb3156dbf0" category="paragraph">In der Spalte Source Network werden alle Netzwerke aufgelistet, die in der OVA-Vorlage definiert sind.</block>
+  <block id="990373fb1cc25af464a0001313f19108" category="list-text">Wählen Sie im Abschnitt *IP-Zuweisungs-Einstellungen* das erforderliche IP-Protokoll aus und klicken Sie dann auf *Weiter*.</block>
+  <block id="e46e129eba07eb4b5e649d1e0e8705fe" category="paragraph">BlueXP Backup und Recovery für VMs unterstützt eine einzige Netzwerkschnittstelle. Wenn Sie mehrere Netzwerkadapter benötigen, müssen Sie diese manuell einrichten.</block>
+  <block id="a3597cfbbc7bac1face6663ca7cee56f" category="list-text">Gehen Sie auf der Seite *Vorlage anpassen* wie folgt vor:</block>
+  <block id="0872cc2ae5ee51207c594d63816e1c49" category="list-text">Geben Sie im Abschnitt *Registrieren bei vorhandenem vCenter* den vCenter-Namen und die vCenter-Anmeldedaten der virtuellen Appliance ein.</block>
+  <block id="e83e36675303176d60875dba6e6a988c" category="paragraph">Geben Sie im Feld *vCenter username* den Benutzernamen im Format Domain\username ein.</block>
+  <block id="587c874122378eff1aa1b51ab4413eaa" category="list-text">Geben Sie im Abschnitt *BlueXP Backup und Recovery für VM-Zugangsdaten erstellen* die lokalen Zugangsdaten ein.</block>
+  <block id="a8b8a57e48b9ffeadf52134384793930" category="paragraph">Geben Sie im Feld *Benutzername* den lokalen Benutzernamen ein; fügen Sie keine Domain-Details ein.</block>
+  <block id="84d178a3dbd52098e70956614b4f030b" category="paragraph">Notieren Sie sich den Benutzernamen und das Kennwort, den Sie angeben. Sie müssen diese Zugangsdaten verwenden, wenn Sie die Konfiguration von BlueXP Backup und Recovery für VMs zu einem späteren Zeitpunkt ändern möchten.</block>
+  <block id="61a8dab3f6aedb51e104e8b3324b04ea" category="list-text">Geben Sie die Anmeldeinformationen für den Benutzer von maint ein.</block>
+  <block id="77f6de55ef0f900f6cca67ff3c69430b" category="list-text">Geben Sie unter *Setup-Netzwerkeigenschaften* den Hostnamen ein.</block>
+  <block id="3fa10b976d2e272f29933ad742d95ea9" category="list-text">Geben Sie im Abschnitt * Setup IPv4 Network Properties* die Netzwerkinformationen ein, z. B. IPv4-Adresse, IPv4-Netzmaske, IPv4-Gateway, IPv4 Primary DNS, IPv4 Secondary DNS, Und IPv4-Suchdomänen.</block>
+  <block id="7f4ea10911b506f2fd2ecf8e410345db" category="paragraph">Sie können diese Schritte überspringen und die Einträge im Abschnitt Netzwerkeigenschaften einrichten leer lassen, wenn Sie mit DHCP als Netzwerkkonfiguration fortfahren möchten.</block>
+  <block id="71f9ed6b3799a05b8e015c69367cfb37" category="list-text">Wählen Sie unter *Setup Datum und Uhrzeit* die Zeitzone aus, in der sich das vCenter befindet.</block>
+  <block id="e69d6a911676da089c14c8e8f2935510" category="list-text">Überprüfen Sie die Seite auf der Seite *Ready to Complete* und klicken Sie auf *Finish*.</block>
+  <block id="e60fd866a673df28143ec78f1ec5e5c6" category="paragraph">Alle Hosts müssen mit IP-Adressen konfiguriert sein (FQDN-Hostnamen werden nicht unterstützt). Der Bereitstellungsvorgang überprüft Ihre Eingaben vor der Bereitstellung nicht.</block>
+  <block id="76785e5d8d7ceebbb25a3306d19d777e" category="paragraph">Sie können den Fortschritt der Bereitstellung im Fenster „Letzte Aufgaben“ anzeigen, während Sie warten, bis die OVF-Import- und Bereitstellungsaufgaben abgeschlossen sind.</block>
+  <block id="dfb68bf37d310949aa0dd64d78a8d9dc" category="paragraph">Nach der erfolgreichen Bereitstellung von BlueXP Backup und Recovery für VMs wird es als Linux VM bereitgestellt, in vCenter registriert und ein VMware vSphere Client installiert.</block>
+  <block id="8e12e468dd8f437d0dc73169b5256571" category="list-text">Navigieren Sie zu der VM, auf der BlueXP Backup und Recovery für VMs bereitgestellt wurde, klicken Sie dann auf die Registerkarte *Zusammenfassung*, und klicken Sie dann auf das Feld *Einschalten*, um die virtuelle Appliance zu starten.</block>
+  <block id="463df4afa807689644efac592f3dfbe4" category="list-text">Während BlueXP Backup und Recovery für VMs eingeschaltet ist, klicken Sie mit der rechten Maustaste auf das implementierte BlueXP Backup und Recovery für VMs, wählen Sie *Gastbetriebssystem* aus und klicken Sie dann auf *VMware-Tools installieren*.</block>
+  <block id="30d965eef5ba25c6b9998ae38270b43e" category="doc">Rechtliche Hinweise</block>
+  <block id="e9c44bbfd795a5d63d74c6a77afee70d" category="paragraph">Rechtliche Hinweise ermöglichen den Zugriff auf Copyright-Erklärungen, Marken, Patente und mehr.</block>
+  <block id="6016a2b341113bf496b719905398ecd2" category="section-title">Urheberrecht</block>
+  <block id="09e95b77ffe81fe465a83ba99efad5c8" category="paragraph"><block ref="09e95b77ffe81fe465a83ba99efad5c8" category="inline-link-rx"></block></block>
+  <block id="126a02652da6de02962cf1b654fd6376" category="section-title">Marken</block>
+  <block id="c4ce4761e466527d26b3e3d5ed1006fd" category="paragraph">NetApp, das NETAPP Logo und die auf der NetApp Markenseite aufgeführten Marken sind Marken von NetApp Inc. Andere Firmen- und Produktnamen können Marken der jeweiligen Eigentümer sein.</block>
+  <block id="7aa531e9acfe2b98e34d2c92fe9846ff" category="paragraph"><block ref="7aa531e9acfe2b98e34d2c92fe9846ff" category="inline-link-rx"></block></block>
+  <block id="be89498d2f8a22ce47c02ba9795fe2af" category="section-title">Patente</block>
+  <block id="d0b19d36be2c5f16e9aef46c8a452d3d" category="paragraph">Eine aktuelle Liste der NetApp Patente finden Sie unter:</block>
+  <block id="d7f1fbcf9ce4e42f705add574d262b2c" category="paragraph"><block ref="d7f1fbcf9ce4e42f705add574d262b2c" category="inline-link-rx"></block></block>
+  <block id="56c34c6410dd45c5cec44149ad0ce037" category="section-title">Datenschutzrichtlinie</block>
+  <block id="fc248f74f5e36542f7f5627b8610e9a3" category="paragraph"><block ref="fc248f74f5e36542f7f5627b8610e9a3" category="inline-link-rx"></block></block>
+  <block id="c0227cef6f07a8cd2ac72f2945b031aa" category="section-title">Open Source</block>
+  <block id="9b73989307c1975dfa4d5e1581e4afe8" category="paragraph">In den Benachrichtigungsdateien finden Sie Informationen zu Urheberrechten und Lizenzen von Drittanbietern, die in der NetApp Software verwendet werden.</block>
+  <block id="1dbd69173905cff968e81a32823f8f1e" category="summary">Backup-Vorgänge werden für alle in einer Ressourcengruppe definierten Ressourcen durchgeführt. Wenn eine Ressourcengruppe über eine Richtlinie und einen konfigurierten Zeitplan verfügt, werden die Backups automatisch gemäß dem Zeitplan durchgeführt.</block>
+  <block id="78d2a696f9b9f71eb637f30f0020bdbf" category="doc">Bei Bedarf das Sichern von Ressourcengruppen sichern</block>
+  <block id="92ae04a417b2b1bf95cb914953f21cce" category="list-text">Sie müssen eine Ressourcengruppe mit einer angehängten Richtlinie erstellt haben.</block>
+  <block id="409609f378546af0c017cd18ffb05b2c" category="paragraph">Starten Sie keinen On-Demand-Backup-Job, wenn bereits ein Job zum Backup von BlueXP Backup und Recovery für VMs ausgeführt wird. Verwenden Sie die Wartungskonsole, um den konfigurierten Backup-Zeitplan für die MySQL-Datenbank anzuzeigen.</block>
+  <block id="8df70f643740e0e6be25c9e73f9347ae" category="list-text">Klicken Sie im linken Navigator-Bereich der vCenter Web Client-Seite auf MENU:BlueXP Backup and Recovery for VMs[Ressourcengruppen], wählen Sie dann eine Ressourcengruppe aus und klicken Sie dann auf *Jetzt ausführen*, um die Sicherung zu starten.</block>
+  <block id="d88005c65b58055629310a63a4557fca" category="paragraph"><block ref="d88005c65b58055629310a63a4557fca" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dee1b58674283aa778714d7ecc9e0d92" category="list-text">Wenn für die Ressourcengruppe mehrere Richtlinien konfiguriert sind, wählen Sie im Dialogfeld Jetzt sichern die Richtlinie aus, die Sie für diesen Backup-Vorgang verwenden möchten.</block>
+  <block id="bb7ace492245c1393f1fa7650b5650f0" category="list-text">Klicken Sie auf *OK*, um die Sicherung zu starten.</block>
+  <block id="634fce580f751c41e854d8f1772f2396" category="list-text">Wenn der Stilllegung-Vorgang für eine der Virtual Machines im Backup fehlschlägt, wird das Backup mit einer Warnung abgeschlossen und als nicht konsistent für Virtual Machines markiert, selbst wenn für die ausgewählte Richtlinie die Konsistenz von Virtual Machines ausgewählt ist. In diesem Fall ist es möglich, dass einige der Virtual Machines erfolgreich stillgelegt wurden. In der Jobüberwachung zeigen die Details der ausgefallenen Virtual Machine den Stilllegen als fehlgeschlagen an.</block>
+  <block id="3e40b4a74f48e508b0fa469b70fe41b2" category="summary">Eine Ressourcengruppe ist der Container für Virtual Machines und Datastores, den Sie schützen möchten.</block>
+  <block id="020a36deb114af1bb518c70d5975e940" category="doc">Erstellen von Ressourcengruppen</block>
+  <block id="74c107d9bc0e07de1820c4ccac80a5bf" category="paragraph">Fügen Sie für alle Ressourcengruppen keine virtuellen Maschinen hinzu, deren Status nicht zugänglich ist. Obwohl es möglich ist, eine Ressourcengruppe zu erstellen, die nicht zugängliche virtuelle Maschinen enthält, schlägt die Sicherung für diese Ressourcengruppe fehl.</block>
+  <block id="9cce6f26b63d9eb5d76faeab404389aa" category="paragraph">Sie können jederzeit Ressourcen einer Ressourcengruppe hinzufügen oder aus dieser entfernen.</block>
+  <block id="52fb0b971147f2d50f41f8affa7cbf5e" category="list-text">Sicherung einer einzelnen Ressource</block>
+  <block id="05ef45af9b0644fd461b58511351eb5e" category="paragraph">Um eine einzelne Ressource zu sichern (z. B. eine einzelne virtuelle Maschine), müssen Sie eine Ressourcengruppe erstellen, die diese einzelne Ressource enthält.</block>
+  <block id="b23ab74a5da8a9fa670a771dd846d06e" category="list-text">Sicherung mehrerer Ressourcen</block>
+  <block id="67a4acd21e837a9ee8a39c0bb84101d1" category="paragraph">Um mehrere Ressourcen zu sichern, müssen Sie eine Ressourcengruppe erstellen, die mehrere Ressourcen enthält.</block>
+  <block id="a5fc7fce0f281a94273520624de03c38" category="list-text">Optimierung von Snapshot Kopien</block>
+  <block id="b861f2c51917fb8a88656ddcb6fd1ca4" category="paragraph">Um Snapshot Kopien zu optimieren, sollten Sie die Virtual Machines und Datenspeicher, die demselben Volume zugeordnet sind, zu einer Ressourcengruppe gruppieren.</block>
+  <block id="9f02509e5496e861df4c341dba05386e" category="list-text">Backup-Richtlinien</block>
+  <block id="ab4c9d1e2eb92442c5b3ece6aa2c0278" category="paragraph">Es ist zwar möglich, eine Ressourcengruppe ohne Sicherungsrichtlinie zu erstellen, Sie können aber nur geplante Datensicherungsvorgänge ausführen, wenn mindestens eine Richtlinie an die Ressourcengruppe angeschlossen ist. Sie können eine vorhandene Richtlinie verwenden oder eine neue Richtlinie erstellen, während Sie eine Ressourcengruppe erstellen.</block>
+  <block id="4360fc5d869bf831be60cbb2a380170e" category="list-text">Kompatibilitätsprüfungen</block>
+  <block id="f99994df955a095a325d081acb02d60a" category="paragraph">Bei der Erstellung einer Ressourcengruppe führt BlueXP Backup und Recovery für VMs Kompatibilitätsprüfungen durch. Gründe für eine Inkompatibilität können sein:</block>
+  <block id="07996c2123551c418aad1f80ac1278e7" category="list-text">VMDKs werden auf nicht unterstütztem Storage gespeichert.</block>
+  <block id="f3c698429326d1c3e24ca05da7a4c5da" category="list-text">Ein gemeinsam genutztes PCI-Gerät ist mit einer virtuellen Maschine verbunden.</block>
+  <block id="77ec02d8115ae8f8baf51a69ba3e38e2" category="list-text">Klicken Sie im linken Navigator-Bereich von BlueXP Backup und Recovery für VMs auf *Ressourcengruppen*.</block>
+  <block id="bef331d16c5d9ba4f0a20c154762ab39" category="list-text">Klicken Sie auf der Seite *Ressourcengruppen* auf *Erstellen*, um den Assistenten zu starten.</block>
+  <block id="fb588da7b4a1c9d0902343b377823fdc" category="paragraph"><block ref="fb588da7b4a1c9d0902343b377823fdc" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cdff6161a900ecd68dd60624c62896af" category="paragraph">Dies ist der einfachste Weg, eine Ressourcengruppen zu erstellen. Sie können jedoch auch eine Ressourcengruppe mit einer Ressource erstellen, indem Sie eine der folgenden Schritte ausführen:</block>
+  <block id="70fab5d9a0c00a6355f6fe5d96929ee9" category="list-text">Um eine Ressourcengruppe für eine virtuelle Maschine zu erstellen, klicken Sie auf MENU:Menu[Hosts and Clusters], klicken Sie mit der rechten Maustaste auf eine virtuelle Maschine, wählen Sie dann BlueXP Backup and Recovery for VMs aus und klicken Sie dann auf *Create*.</block>
+  <block id="6659300612a814c55e5e4a0ab3381c7a" category="list-text">Um eine Ressourcengruppe für einen Datastore zu erstellen, klicken Sie auf MENU:Menu[Hosts and Clusters], klicken Sie mit der rechten Maustaste auf einen Datastore, wählen Sie dann BlueXP Backup and Recovery for VMs aus und klicken Sie dann auf *Create*.</block>
+  <block id="f1410de57632101f52f16d7d6c306025" category="list-text">Geben Sie auf der Seite *Allgemeine Info &amp; Benachrichtigung* im Assistenten die erforderlichen Werte ein.</block>
+  <block id="2b2620f1962d78eb23f6f754d96e6546" category="list-text">Gehen Sie auf der Seite *Ressourcen* wie folgt vor:</block>
+  <block id="5d113f2038d289f391614c39043629e8" category="paragraph">Umfang</block>
+  <block id="ddc3f02ab84de97f0abdafefdb87394f" category="paragraph">Wählen Sie den zu schützenden Ressourcentyp aus:</block>
+  <block id="eff845e03ea7f765e5646b3de0aa3188" category="list-text">Datenspeicher</block>
+  <block id="76b0fa668c1cd016096eb9bc1bfde44a" category="list-text">Virtual Machines</block>
+  <block id="615707baa418ce315e44ac2a5d6164af" category="paragraph">Rechenzentrum</block>
+  <block id="94936dc19126e0203fd5c47b7e05428b" category="paragraph">Navigieren Sie zu Virtual Machines oder Datastores</block>
+  <block id="4c928d1c171b7d62d8f758ffa689710f" category="paragraph">Verfügbare Einheiten</block>
+  <block id="9b8a9a84d677934089901b3496c6b38f" category="paragraph">Wählen Sie die Ressourcen aus, die Sie schützen möchten, und klicken Sie dann auf &gt;, um Ihre Auswahl in die Liste Ausgewählte Elemente zu verschieben</block>
+  <block id="c4d7d69f23fe0a7e621b08dfa824512e" category="paragraph">Wenn Sie auf *Weiter* klicken, prüft das System zunächst, ob BlueXP Backup und Recovery für Managed verwaltet werden und mit dem Speicher kompatibel ist, auf dem sich die ausgewählten Ressourcen befinden.</block>
+  <block id="3242a164ddcaa9a72988c3af2bc007f4" category="paragraph">Wenn die ausgewählte &lt;resource-name&gt; Meldung nicht mit BlueXP Backup und Recovery für VMs kompatibel ist, wird angezeigt, dann ist eine ausgewählte Ressource nicht mit BlueXP Backup und Recovery für VMs kompatibel.</block>
+  <block id="62307e34d22f9c73f798fb198882b14e" category="list-text">Wählen Sie auf der Seite *Spanning Disks* eine Option für virtuelle Maschinen mit mehreren VMDKs über mehrere Datastores aus:</block>
+  <block id="fe83ca3448603607d6f63f28881e4f36" category="list-text">Schließen Sie immer alle Spanning-Datastores aus [dies ist der Standard für Datastores.]</block>
+  <block id="aa41470a97a21d65eb54e46243538102" category="list-text">Immer alle Spanning-Datastores einbeziehen [Dies ist der Standard für Virtual Machines].</block>
+  <block id="75742d049e48e4760129323eb0e54d8d" category="list-text">Wählen Sie die Spanning-Datastores manuell aus, die einbezogen werden sollen.</block>
+  <block id="3210952a5fb8d5ccfeba07ae678f1775" category="list-text">Wählen oder erstellen Sie auf der Seite *Richtlinien* eine oder mehrere Backup-Richtlinien, wie in der folgenden Tabelle dargestellt:</block>
+  <block id="2cdd19659310fc48844c26aedc8fd9a4" category="cell">Um… zu verwenden</block>
+  <block id="6059ad69090f1a7b85ee31e84e827f9c" category="paragraph">Eine vorhandene Richtlinie</block>
+  <block id="5e8922fe6b33e53144f78b8592674a6c" category="paragraph">Wählen Sie eine oder mehrere Richtlinien aus der Liste aus.</block>
+  <block id="9c5b7358395094126cc2831e0ded69a9" category="paragraph">Eine neue Richtlinie</block>
+  <block id="f2a42a68e067e481d094b018459ef895" category="list-text">Klicken Sie Auf *Erstellen*.</block>
+  <block id="fd9ca72572d4ab5e600c85b32f8a9e6a" category="list-text">Schließen Sie den Assistenten für neue Backup-Richtlinien ab, um zum Assistenten „Ressourcengruppe erstellen“ zurückzukehren.</block>
+  <block id="5049311e411f306df5ef01765b9dc8ec" category="list-text">Konfigurieren Sie auf der Seite *Schedules* den Backup-Zeitplan für jede ausgewählte Richtlinie.</block>
+  <block id="d1bdd68846c0836400eff9ed1186b9d5" category="paragraph">Geben Sie im Feld Startzeit ein Datum und eine andere Zeit als null ein. Das Datum muss im Format Tag/Monat/Jahr angegeben werden. Sie müssen jedes Feld ausfüllen. BlueXP Backup und Recovery für VMs erstellt Pläne in der Zeitzone, in der BlueXP Backup und Recovery für VMs implementiert wird. Die Zeitzone kann mithilfe der GUI von BlueXP Backup und Recovery für VMs geändert werden.</block>
+  <block id="c2e579bbd89fc3c371008f0c4ea04967" category="paragraph"><block ref="c2e579bbd89fc3c371008f0c4ea04967" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e35e0852d8b258c1262911fcef9235fc" category="list-text">Überprüfen Sie die *Zusammenfassung*, und klicken Sie dann auf *Fertig stellen*.</block>
+  <block id="e0537e9cf2e3b46fd54c91b2d3951630" category="paragraph">Bevor Sie auf Fertig stellen klicken, können Sie zu einer beliebigen Seite des Assistenten zurückkehren und die Informationen ändern.</block>
+  <block id="5c8ec5161ac5fb9e56619ce4ca7f6562" category="paragraph">Nachdem Sie auf Fertig stellen geklickt haben, wird die neue Ressourcengruppe zur Liste der Ressourcengruppen hinzugefügt.</block>
+  <block id="08105970723024c1f3e2f1785730db79" category="paragraph">Wenn der Stilllegung-Vorgang für eine der Virtual Machines im Backup fehlschlägt, wird das Backup als nicht konsistent für Virtual Machines markiert, selbst wenn für die ausgewählte Richtlinie die Konsistenz von Virtual Machines ausgewählt ist. In diesem Fall ist es möglich, dass einige der Virtual Machines erfolgreich stillgelegt wurden.</block>
+  <block id="f23ad563b3074aecc0e703cc5f05f6d3" category="summary">Vor der Nutzung von BlueXP Backup und Recovery für VMs müssen Sie auf verschiedene Anforderungen und Überlegungen achten.</block>
+  <block id="e7d709a415f457e468d93ff7beb8afbf" category="doc">Anforderungen und Überlegungen</block>
+  <block id="5769193b786669c0ecafc3e705154789" category="paragraph">Vor der Nutzung von BlueXP Backup und Recovery für VMs müssen Sie auf verschiedene Anforderungen und Überlegungen achten:</block>
+  <block id="b4b679d794e454844cd086d373906115" category="list-text">BlueXP Backup und Recovery für VMs wird als Linux VM implementiert, unabhängig davon, ob Sie das Plug-in zum Schutz von Daten auf Windows Systemen oder Linux Systemen verwenden.</block>
+  <block id="0e462b074c170de3b3638ac2ed1afb3f" category="list-text">Sie sollten BlueXP Backup und Recovery für VMs auf VMC auf AWS implementieren.</block>
+  <block id="ec89438f95afaf1236c073e8089c548e" category="paragraph">BlueXP Backup und Recovery für VMs und VMC sollten dieselbe Zeitzone verwenden. Die Backup-Zeitpläne werden in der Zeitzone ausgeführt, in der BlueXP Backup und Recovery für VMs implementiert werden. VMC meldet Daten in der Zeitzone, in der sich der VMC befindet. Wenn sich also das Backup und Recovery von BlueXP für VMs und VMC in unterschiedlichen Zeitzonen befinden, sind die Daten im BlueXP Dashboard für Backup und Recovery für VMs möglicherweise nicht mit den Daten in den Berichten identisch.</block>
+  <block id="195abd4b75057ce435ca652cb45c2a64" category="list-text">Das Backup und Recovery von BlueXP für VMs darf nicht in einem Ordner mit einem Namen und Sonderzeichen implementiert werden.</block>
+  <block id="a7c99fa4270e567a328e88618380eaa4" category="paragraph">Der Ordnername darf die folgenden Sonderzeichen nicht enthalten: €!@#%^&amp;()_+{}';.,*?"&lt;&gt;</block>
+  <block id="2b70ce4cce0a6dc6a541ed9c851d419c" category="list-text">Sie müssen für jede VM auf AWS eine separate, eindeutige Instanz des BlueXP Backup und Recovery für VMs implementieren und registrieren.</block>
+  <block id="8ced16f68a9710f544fa07b75b031531" category="list-text">Jede VMC auf AWS sollte mit einer separaten Instanz von BlueXP Backup und Recovery für VMs gepaart werden.</block>
+  <block id="a0b8712c405e33c495bcbf0f2430f84e" category="list-text">Jede Instanz von BlueXP Backup und Recovery für VMs muss als separate Linux VM implementiert werden.</block>
+  <block id="25950cd6c2e7c3d5805a7155cfa39e2a" category="paragraph">Wenn Sie beispielsweise Backups von sechs verschiedenen Instanzen von VMC auf AWS durchführen möchten, müssen Sie sechs BlueXP Backup und Recovery für VM-Instanzen auf sechs Hosts implementieren. Jede VMC auf AWS muss mit einer einzigartigen Instanz von BlueXP Backup und Recovery für VMs gepaart sein.</block>
+  <block id="2aa21a5ffa0dab32f9fd25622fcf534d" category="summary">BlueXP Backup und Recovery für VMs ist eine eigenständige virtuelle Appliance (Open Virtual Appliance Format), die Datensicherungsservices für VMs und Datastores in VMware Cloud on AWS und Amazon FSX for NetApp ONTAP bietet. Mit BlueXP Backup und Recovery für VMs können Sie Datastores sichern und Virtual Machines am Originalspeicherort wiederherstellen.</block>
+  <block id="26a15d7986f1607a9f7daa4efd926c80" category="doc">BlueXP Backup und Recovery für Virtual Machines auf Amazon FSX</block>
+  <block id="f5eab3d317d6c4d95063c4bb5c161509" category="list-text">Sie können auf Amazon FSX nur NFS-Datastores sichern.</block>
+  <block id="2efffbafe41056b8a16eaa739e9b56e7" category="list-text">Sie sollten ONTAP 9.10 oder höher ausführen, um NFS-Datastores zu sichern.</block>
+  <block id="32b36f1d8e8c3d59e6463ae39985c79f" category="list-text">VMware Cloud verfügt über eine vordefinierte Rolle „Cloud-Admin“. Die CloudAdmin-Rolle verfügt über die erforderlichen Berechtigungen zum Erstellen und Managen von SDDC-Workloads und zugehörigen Objekten wie Storage-Richtlinien, Inhaltsbibliotheken, vSphere-Tags und Ressourcenpools.</block>
+  <block id="94cc43cd13438a1a44297fe4d9e5a397" category="list-text">Sie können VMs und VMDK an ihrem aktuellen Speicherort wiederherstellen (in-Place-Restore).</block>
+  <block id="243263104c829e77835d632f591230d5" category="summary">Bevor Sie einen Support-Fall beim technischen Support von NetApp eröffnen können, müssen Sie BlueXP ein NetApp Support Site Konto hinzufügen und sich dann für den Support registrieren.</block>
+  <block id="42748df9eaa0be17ddc5cc1593cf57ab" category="doc">Für den Support anmelden</block>
+  <block id="0c7db2bd63c891adb2c0fa4527805d72" category="paragraph">Für Ihr BlueXP Konto und für einzelne Cloud Volumes ONTAP Systeme ist eine Support-Registrierung erforderlich.</block>
+  <block id="0b0e252af8897fbe981ec6682d2aa33b" category="section-title">Übersicht über die Support-Registrierung</block>
+  <block id="192054ad7601240a3e8be54cc5cc548e" category="paragraph">Es gibt zwei Registrierungsformulare, um die Support-Berechtigung zu aktivieren:</block>
+  <block id="2322ca552c2b0ebe090c8485519246a8" category="list-text">Registrieren Ihres BlueXP-Konto-ID-Support-Abonnements (Ihre 20-stellige Seriennummer 960xxxxxxxxx auf der Seite Support-Ressourcen in BlueXP).</block>
+  <block id="23fdcbefa6d9cd877be7ceb7a18bb936" category="paragraph">Dies dient als Ihre einzige Support-Abonnement-ID für jeden Service in BlueXP. Jedes BlueXP-Abonnement für Support auf Kontoebene muss registriert werden.</block>
+  <block id="55ff64467cd508971910145ab5d6b3b8" category="list-text">Registrieren der Cloud Volumes ONTAP Seriennummern für ein Abonnement auf dem Markt Ihres Cloud-Providers (dies sind 20-stellige Seriennummern von 909201xxxxxx).</block>
+  <block id="67dbdeb11e22ea7def810bade59ce818" category="paragraph">Diese Seriennummern werden als _PAYGO Seriennummern_ bezeichnet und werden zum Zeitpunkt der Cloud Volumes ONTAP Implementierung von BlueXP generiert.</block>
+  <block id="28164bf9e881ddc9e7ff74744bfce180" category="paragraph">Durch das Registrieren beider Arten von Seriennummern können Kunden Funktionen wie das Öffnen von Support-Tickets und die automatische Erstellung von Support-Cases nutzen. Die Registrierung ist abgeschlossen, indem wie unten beschrieben Konten der NetApp Support Website (NSS) zu BlueXP hinzugefügt werden.</block>
+  <block id="0375f4855be072c7d856a0233cc21de9" category="section-title">Unterstützung für Cloud-Provider-Lösungen</block>
+  <block id="e922b9aa0836a1d93e11cac0fe4c9004" category="paragraph">Technischer Support zu den folgenden Cloud-Provider-Lösungen finden Sie im Abschnitt „Hilfe erhalten“ in der BlueXP Dokumentation zu diesem Produkt.</block>
+  <block id="18cf072964a583150dd247485ba75b92" category="inline-link-macro">Amazon FSX für ONTAP</block>
+  <block id="9d06990508d25d367d9158c6558eb9c8" category="list-text"><block ref="9d06990508d25d367d9158c6558eb9c8" category="inline-link-macro-rx"></block></block>
+  <block id="7450cfde7058dc5e1f7909d0280fd7ae" category="inline-link-macro">Azure NetApp Dateien</block>
+  <block id="2e0c742f4616eb27b5b7646aa790edfe" category="list-text"><block ref="2e0c742f4616eb27b5b7646aa790edfe" category="inline-link-macro-rx"></block></block>
+  <block id="b0cee72642f5457a71ddd0b49efb6d93" category="inline-link-macro">Cloud Volumes Service für Google Cloud</block>
+  <block id="cf14bff66a8b72d3675db8ffe0f02ee3" category="list-text"><block ref="cf14bff66a8b72d3675db8ffe0f02ee3" category="inline-link-macro-rx"></block></block>
+  <block id="5a19febf1dcb23c10e8dcfde64ba764c" category="section-title">Registrieren Sie Ihr BlueXP Konto für NetApp Support</block>
+  <block id="6bbc2ba432f59ab65ee3d8ac5a58336e" category="paragraph">Um sich für den Support zu registrieren und die Supportberechtigung zu aktivieren, muss ein Benutzer in Ihrem BlueXP Konto ein NetApp Support Site Konto mit seinen BlueXP Anmeldedaten verknüpfen. Wie Sie sich für den NetApp Support registrieren, hängt davon ab, ob Sie bereits über einen NSS Account (NetApp Support Site) verfügen.</block>
+  <block id="bf4c731c0ee7f60c8018ad8f96828dda" category="section-title">Bestandskunde mit NSS-Konto</block>
+  <block id="7e177185e7eddff33dd8f3aeb7551132" category="paragraph">Wenn Sie ein NetApp Kunde mit einem NSS-Konto sind, müssen Sie sich lediglich für den Support über BlueXP registrieren.</block>
+  <block id="b019ab068deba8494415cbd226ca0c4e" category="list-text">Klicken Sie oben rechts in der BlueXP-Konsole auf das Symbol Einstellungen und wählen Sie *Anmeldeinformationen*.</block>
+  <block id="41e1e3cff4a07ce2ecc08e6c09f11092" category="list-text">Klicken Sie Auf *Benutzeranmeldeinformationen*.</block>
+  <block id="0c788a722f31f8f0cf36539ee04615cf" category="list-text">Wählen Sie *NSS-Anmeldeinformationen hinzufügen* und folgen Sie der Eingabeaufforderung für die NetApp-Support-Website (NSS)-Authentifizierung.</block>
+  <block id="8c916e828e9e5a3592c8cac4e25928be" category="list-text">Um zu bestätigen, dass die Registrierung erfolgreich war, klicken Sie auf das Hilfesymbol und wählen Sie *Support*.</block>
+  <block id="8add4eb0d3f6ce61d374f3df3ee4eadf" category="paragraph">Auf der Seite *Ressourcen* sollte angezeigt werden, dass Ihr Konto für Support registriert ist.</block>
+  <block id="10c56875db7a47f791d653e5d5bff0e9" category="inline-image-macro">Ein Screenshot mit einer Seriennummer des Kontos und einem grünen Kontrollkästchen sowie dem für den Support registrierten Text.</block>
+  <block id="3d183819a15163ef2e2e7d9d764254a9" category="paragraph"><block ref="3d183819a15163ef2e2e7d9d764254a9" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d9a01bdcfab6f0a10fc126999b4d5988" category="paragraph">Beachten Sie, dass andere BlueXP Benutzer diesen Support-Registrierungsstatus nicht sehen, wenn sie ihrem BlueXP Login kein NetApp Support Site Konto zugeordnet haben. Das bedeutet jedoch nicht, dass Ihr BlueXP Konto nicht für den Support registriert ist. Solange ein Benutzer im Konto diese Schritte befolgt hat, wurde Ihr Konto registriert.</block>
+  <block id="1ff5aefce774ec72a211f2b3bb10b950" category="section-title">Vorhandener Kunde, aber kein NSS-Konto</block>
+  <block id="bdd862f49d428a850400bcf2f53cdaf2" category="paragraph">Wenn Sie bereits NetApp Kunde sind und über vorhandene Lizenzen und Seriennummern sowie _No_ NSS Konto verfügen, müssen Sie ein NSS Konto erstellen und es Ihren BlueXP Anmeldedaten zuordnen.</block>
+  <block id="5b2b7f628f804bcb786a097c7e45aa41" category="inline-link">NetApp Support Site-Formular zur Benutzerregistrierung</block>
+  <block id="0c4a8b62da9473fbd5401273c4f85ee0" category="list-text">Erstellen Sie einen NetApp Support Site Account, indem Sie den ausfüllen<block ref="041bcb6d9bdf91f7d6ac92ae3a196e12" category="inline-link-rx"></block></block>
+  <block id="d61c9f72493817776f392db42ac446a2" category="list-text">Stellen Sie sicher, dass Sie die entsprechende Benutzerebene wählen, die normalerweise *NetApp Kunde/Endbenutzer* ist.</block>
+  <block id="5226d4ec1f4f81b740cbbd27635b441f" category="list-text">Kopieren Sie unbedingt die oben verwendete BlueXP-Kontonummer (960xxxx) für das Feld Seriennummer. Dadurch wird die Kontobearbeitung beschleunigt.</block>
+  <block id="0499bba105f8a891a2c671f1ba99dd34" category="list-text">Ordnen Sie Ihr neues NSS-Konto Ihrer BlueXP Anmeldung zu, indem Sie die unter aufgeführten Schritte durchführen <block ref="2f3aba04ec49ee5f0573a6c80a1b9df2" category="inline-xref-macro-rx"></block>.</block>
+  <block id="e9b1f53d6cabb3394833a4e102eb6a69" category="section-title">Neu bei NetApp</block>
+  <block id="c20c107d0d4eef6351660f3590324232" category="paragraph">Wenn Sie neu bei NetApp sind und über keinen NSS-Account verfügen, befolgen Sie jeden Schritt unten.</block>
+  <block id="1afe19576f77bb0073c93359ed2cbb18" category="list-text">Klicken Sie oben rechts in der BlueXP-Konsole auf das Hilfesymbol, und wählen Sie *Support*.</block>
+  <block id="b50f0a46135bcb7083b1f2f82032fc26" category="inline-image-macro">Ein Screenshot des Hilfemenü, in dem Support die erste Option aufgeführt ist</block>
+  <block id="e8d4092baef6680c6a35d5228ae31de2" category="paragraph"><block ref="e8d4092baef6680c6a35d5228ae31de2" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="2974170a8b1b5b4a2ac69aacd4c1c9c3" category="list-text">Suchen Sie auf der Seite für die Support-Registrierung die Seriennummer Ihres Kontos.</block>
+  <block id="379f9cd57d97013f3f7fdd24f692a0b1" category="paragraph"><block ref="379f9cd57d97013f3f7fdd24f692a0b1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="dd50e314c18933734174c1156dd9237f" category="inline-link">Die Support-Registrierungs-Website von NetApp</block>
+  <block id="78f94e749b89d69dcbf3baff21ccb958" category="list-text">Navigieren Sie zu<block ref="e1c4be66250fd76d5c52bfe2cb7daee2" category="inline-link-rx"></block> Und wählen Sie *Ich bin kein registrierter NetApp Kunde*.</block>
+  <block id="d4f633ef130727b2776fa7f45024ca7d" category="list-text">Füllen Sie die Pflichtfelder aus (mit roten Sternchen).</block>
+  <block id="1128fc8d5ec64880f4d49337ed798d31" category="list-text">Wählen Sie im Feld *Product Line* die Option *Cloud Manager* aus, und wählen Sie dann den gewünschten Abrechnungsanbieter aus.</block>
+  <block id="50a1dc01b7312307c34a888071586955" category="list-text">Kopieren Sie die Seriennummer des Kontos von Schritt 2 oben, füllen Sie die Sicherheitsprüfung aus und bestätigen Sie dann, dass Sie die globale Datenschutzrichtlinie von NetApp lesen.</block>
+  <block id="3a24c87c9971d2011b4df223718f84b4" category="paragraph">Zur Fertigstellung dieser sicheren Transaktion wird sofort eine E-Mail an die angegebene Mailbox gesendet. Überprüfen Sie Ihre Spam-Ordner, wenn die Validierungs-E-Mail nicht in wenigen Minuten ankommt.</block>
+  <block id="03413baeca1ff7222737d8ce299bd4e8" category="list-text">Bestätigen Sie die Aktion in der E-Mail.</block>
+  <block id="201080500e946070a2e4873042507c77" category="paragraph">Indem Sie Ihre Anfrage an NetApp senden, wird Ihnen die Erstellung eines NetApp Support Site Kontos empfohlen.</block>
+  <block id="cc8b0535948da368f832027c19b7f853" category="list-text">Kopieren Sie die oben angegebene Seriennummer (960xxxx) für das Feld „Seriennummer“. Dadurch wird die Kontobearbeitung beschleunigt.</block>
+  <block id="bd965e38a0c9cf27aa1bde099308e23f" category="paragraph-title">Nachdem Sie fertig sind</block>
+  <block id="684375e279a289295b72a006d93e2c4c" category="paragraph">NetApp sollte sich bei diesem Prozess mit Ihnen in Verbindung setzen. Dies ist eine einmalige Onboarding-Übung für neue Benutzer.</block>
+  <block id="5cdee814e2d9ba3490a8f16d00c65759" category="paragraph">Wenn Sie über Ihren NetApp Support Site Account verfügen, ordnen Sie das Konto Ihrer BlueXP Anmeldung zu, indem Sie die Schritte unter ausführen <block ref="2f3aba04ec49ee5f0573a6c80a1b9df2" category="inline-xref-macro-rx"></block>.</block>
+  <block id="3e616bae81890a6c8fae17c9b45af152" category="section-title">Verknüpfen von NSS-Anmeldeinformationen für den Cloud Volumes ONTAP-Support</block>
+  <block id="d8f0da67cbab6e43f6d266bdab68cdc8" category="paragraph">Um die folgenden wichtigen Workflows für Cloud Volumes ONTAP zu ermöglichen, müssen die Zugangsdaten für die NetApp Support Website mit Ihrem BlueXP Konto verknüpft werden:</block>
+  <block id="a0518a10626dc11fd00e2d20265ad240" category="list-text">Registrieren von Pay-as-you-go Cloud Volumes ONTAP Systemen für Support</block>
+  <block id="321aadf78ef73521712291b7aba6411f" category="paragraph">Die Bereitstellung Ihres NSS Kontos ist erforderlich, um Support für Ihr System zu aktivieren und Zugang zu den technischen Support-Ressourcen von NetApp zu erhalten.</block>
+  <block id="d51b2b497db445a16b1c9583c1abbb59" category="list-text">Implementierung von Cloud Volumes ONTAP unter Verwendung von BYOL (Bring-Your-Own-License)</block>
+  <block id="2ebfeabed40c2270d9fa8325080a4b3e" category="paragraph">Die Bereitstellung Ihres NSS-Kontos ist erforderlich, damit BlueXP Ihren Lizenzschlüssel hochladen und das Abonnement für den von Ihnen erworbenen Zeitraum aktivieren kann. Dies schließt automatische Updates für Vertragsverlängerungen ein.</block>
+  <block id="f5135b68b75a8404803a1eb438e40c5e" category="list-text">Aktualisieren der Cloud Volumes ONTAP Software auf die neueste Version</block>
+  <block id="39f382b97080640c75604b5890f3a5d3" category="paragraph">Das Zuordnen der NSS-Anmeldedaten zu Ihrem BlueXP Konto unterscheidet sich von dem NSS-Konto, das mit einer BlueXP Benutzeranmeldung verknüpft ist.</block>
+  <block id="e3bc6d35311568d55f1c8ea11984b964" category="paragraph">Diese NSS-Zugangsdaten sind mit Ihrer spezifischen BlueXP Konto-ID verknüpft. Benutzer, die zum BlueXP Konto gehören, können über *Support &gt; NSS Management* auf diese Anmeldedaten zugreifen.</block>
+  <block id="328a2c1e7778e9edaf79d90c51409ac4" category="list-text">Wenn Sie über ein Konto auf Kundenebene verfügen, können Sie ein oder mehrere NSS-Konten hinzufügen.</block>
+  <block id="e3cd99e4aa330ae6bdfb3754d83ae962" category="list-text">Wenn Sie einen Partner- oder Reseller-Account haben, können Sie ein oder mehrere NSS-Konten hinzufügen, können aber nicht neben Kunden-Level Accounts hinzugefügt werden.</block>
+  <block id="d17d6b5dafebab6b7659da8850737e70" category="list-text">Klicken Sie auf *NSS Management &gt; NSS-Konto hinzufügen*.</block>
+  <block id="8aaf101e623c543c7eef3c65f6233366" category="list-text">Wenn Sie dazu aufgefordert werden, klicken Sie auf *Weiter*, um auf eine Microsoft-Login-Seite umgeleitet zu werden.</block>
+  <block id="19d089db572ee6a1e154a0c9c9e57bfd" category="paragraph">NetApp verwendet Microsoft Azure Active Directory als Identitäts-Provider für Authentifizierungsservices, die sich speziell für Support und Lizenzierung entscheiden.</block>
+  <block id="465ec6d5eafa3524c948c99d8bfcd306" category="list-text">Geben Sie auf der Anmeldeseite die registrierte E-Mail-Adresse und das Kennwort Ihrer NetApp Support Site an, um den Authentifizierungsvorgang durchzuführen.</block>
+  <block id="cbc6cc3bb022583403171b447b2a962c" category="paragraph">Mit diesen Aktionen kann BlueXP Ihr NSS-Konto für Dinge wie Lizenzdownloads, Softwareaktualisierungs-Verifizierung und zukünftige Support-Registrierungen verwenden.</block>
+  <block id="cf3a2d2c139bf5c9cc87fe714bfff3b1" category="paragraph">Beachten Sie Folgendes:</block>
+  <block id="ec084bb25ed5b934c09b361069c246b2" category="list-text">Das NSS-Konto muss ein Konto auf Kundenebene sein (kein Gast- oder Temporärkonto). Sie können mehrere NSS-Konten auf Kundenebene haben.</block>
+  <block id="27387009488fe78dcc7cb7e3e432792f" category="list-text">Es kann nur ein NSS-Konto vorhanden sein, wenn es sich bei diesem Konto um ein Partner-Level-Konto handelt. Wenn Sie versuchen, NSS-Konten auf Kundenebene hinzuzufügen und ein Konto auf Partnerebene vorhanden ist, erhalten Sie die folgende Fehlermeldung:</block>
+  <block id="d926847e4634e19a1aa7358becc0fa27" category="paragraph">„Der NSS-Kundentyp ist für dieses Konto nicht zulässig, da es bereits NSS-Benutzer unterschiedlichen Typs gibt.“</block>
+  <block id="a04a3a5322782e8c18d0d64be7e1ccbc" category="paragraph">Dasselbe gilt, wenn Sie bereits NSS-Konten auf Kundenebene haben und versuchen, ein Konto auf Partnerebene hinzuzufügen.</block>
+  <block id="1afe8a81cfddc9fa9559e272bb6b9496" category="list-text">Bei der erfolgreichen Anmeldung wird NetApp den NSS-Benutzernamen speichern.</block>
+  <block id="1dcb63fd55c4d22e87cb32275b8cc808" category="inline-image-macro">Ein Symbol von drei horizontalen Punkten</block>
+  <block id="0dfcbbbe02d3e96f8ad78782e8772587" category="paragraph">Dies ist eine vom System generierte ID, die Ihrer E-Mail zugeordnet ist. Auf der Seite *NSS Management* können Sie Ihre E-Mail über anzeigen <block ref="5151db0ded96d46f40ae09b5e5b167a1" category="inline-image-macro-rx" type="image"></block> Menü.</block>
+  <block id="fc79de85a483938f72fbcb9822ec0ae3" category="list-text">Wenn Sie jemals Ihre Anmeldeinformationen aktualisieren müssen, gibt es im auch eine *Anmeldeinformationen aktualisieren*-Option <block ref="5151db0ded96d46f40ae09b5e5b167a1" category="inline-image-macro-rx" type="image"></block> Menü.</block>
+  <block id="b14d512a3c64fb5df16f6721b0603c63" category="paragraph">Wenn Sie diese Option verwenden, werden Sie aufgefordert, sich erneut anzumelden. Beachten Sie, dass das Token für diese Konten nach 90 Tagen abläuft. Eine Benachrichtigung wird gesendet, um Sie darüber zu informieren.</block>
+  <block id="c9df4195a305212ffd7b56d24f67129d" category="summary">NetApp bietet Unterstützung für BlueXP auf verschiedene Weise. Umfassende kostenlose Self-Support-Optionen stehen rund um die Uhr zur Verfügung, wie etwa Knowledge Base-Artikel (KB) und ein Community-Forum. Ihre Support-Registrierung umfasst technischen Remote-Support über Web-Ticketing.</block>
+  <block id="fabfc25ef8996fd90836e58a4c0b26b6" category="doc">Holen Sie sich Hilfe</block>
+  <block id="7c5661ab6b39ee901cea00a6e7020a49" category="paragraph">NetApp bietet Unterstützung für BlueXP und seine Cloud-Services auf unterschiedliche Weise. Umfassende kostenlose Self-Support-Optionen stehen rund um die Uhr zur Verfügung, wie etwa Knowledge Base-Artikel (KB) und ein Community-Forum. Ihre Support-Registrierung umfasst technischen Remote-Support über Web-Ticketing.</block>
+  <block id="edd15fbeb7b2dffa163336ecd4f3e80c" category="section-title">Nutzen Sie Self-Support-Optionen</block>
+  <block id="5e4b821a1a82558dead1ef6961e90666" category="paragraph">Diese Optionen sind kostenlos verfügbar, 24 Stunden am Tag, 7 Tage die Woche:</block>
+  <block id="5b6cf869265c13af8566f192b4ab3d2a" category="list-text">Dokumentation</block>
+  <block id="a4a6c2ea0078252eac2d74ef3e6c917c" category="paragraph">Die BlueXP-Dokumentation, die Sie gerade anzeigen.</block>
+  <block id="19111351b69b6b15668130b38b7f6038" category="inline-link">Wissensdatenbank</block>
+  <block id="942c9249796cf6b78c981ebf15195809" category="list-text"><block ref="942c9249796cf6b78c981ebf15195809" category="inline-link-rx"></block></block>
+  <block id="9a3db1abe5491d0eb9bb5d125981356c" category="paragraph">Suchen Sie in der BlueXP Knowledge Base nach hilfreichen Artikeln zur Fehlerbehebung.</block>
+  <block id="14526abd8bda5af347775025cd5342cf" category="inline-link">Communitys</block>
+  <block id="410fdb9caa9c64da2ff3f88f4836960d" category="list-text"><block ref="410fdb9caa9c64da2ff3f88f4836960d" category="inline-link-rx"></block></block>
+  <block id="00c5fef3bb9d593ae96bf5d2ee60354a" category="paragraph">Treten Sie der BlueXP Community bei, um laufende Diskussionen zu verfolgen oder neue zu erstellen.</block>
+  <block id="80b1b0d2b1ebf2b3cba2d25759801afd" category="list-text">Mailto:ng-cloudmanager-feedback@netapp.com[Feedback email]</block>
+  <block id="6702efec14563f45f1ee2f8c613b8ad8" category="paragraph">Wir wissen Ihre Vorschläge zu schätzen. Senden Sie uns Ihr Feedback, um BlueXP zu verbessern.</block>
+  <block id="d88bacf2a9fdcbbc844edcba97c34e30" category="section-title">Erstellen Sie einen Fall mit dem NetApp Support</block>
+  <block id="82812db645b6ff5e9c2a24ddfb66c8d6" category="paragraph">Zusätzlich zu den oben genannten Self-Support-Optionen können Sie gemeinsam mit einem NetApp Support-Experten eventuelle Probleme nach der Aktivierung des Supports beheben.</block>
+  <block id="8fece025a1a8fef7018449bf104a2527" category="list-title">Bevor Sie beginnen</block>
+  <block id="920fe1428c19533eda6222fe7e58efbe" category="inline-link">Managen Sie Zugangsdaten für Ihre BlueXP Anmeldung</block>
+  <block id="e1d2e1a634647fd631081bc4f6f8e523" category="list-text">Um die Funktion *Fall erstellen* nutzen zu können, müssen Sie zunächst Ihre Anmeldedaten für die NetApp Support-Website mit Ihren BlueXP Anmeldedaten verknüpfen.<block ref="2a0d8b66ca9e99d023b48cf25f40fb12" category="inline-link-rx"></block>.</block>
+  <block id="e49aa971c20ec071f1b5bbc3c7266769" category="list-text">Wenn Sie einen Fall für ein ONTAP System mit einer Seriennummer eröffnen, muss Ihr NSS-Konto mit der Seriennummer des Systems verknüpft sein.</block>
+  <block id="6254a4afeeb76765a127fe74d31c1b3d" category="list-text">Klicken Sie in BlueXP auf *Hilfe &gt; Support*.</block>
+  <block id="08d96fdd1a845d80db99e6e1dffb8bc7" category="list-text">Wählen Sie auf der Seite *Ressourcen* eine der verfügbaren Optionen unter Technischer Support:</block>
+  <block id="383133cb6f7207b1c65c3ace94aa5e95" category="list-text">Klicken Sie auf *Rufen Sie uns an*, wenn Sie mit jemandem am Telefon sprechen möchten. Sie werden zu einer Seite auf netapp.com weitergeleitet, auf der die Telefonnummern aufgeführt sind, die Sie anrufen können.</block>
+  <block id="5be2e1dfe4bf215289731df45ec8157b" category="list-text">Klicken Sie auf *Fall erstellen*, um ein Ticket bei einem NetApp Support Spezialisten zu öffnen:</block>
+  <block id="d63bf50426f4c712554faec55b30c548" category="list-text">*Service*: Wählen Sie den Dienst aus, mit dem das Problem verknüpft ist. Beispiel: BlueXP, wenn es sich um ein Problem des technischen Supports mit Workflows oder Funktionen im Service handelt.</block>
+  <block id="2e50c5f85523f0aba9ff2db10f18279c" category="list-text">*Arbeitsumgebung*: Wählen Sie *Cloud Volumes ONTAP* oder *On-Prem* und anschließend die zugehörige Arbeitsumgebung aus.</block>
+  <block id="aa996e20900197b0ea41485ada083d8c" category="paragraph">Die Liste der Arbeitsumgebungen liegt im Bereich des BlueXP-Kontos, des Arbeitsbereichs und des Connectors, den Sie im oberen Banner des Dienstes ausgewählt haben.</block>
+  <block id="e6f29fb3c7636dc0040600dd0e84bb79" category="list-text">*Case Priority*: Wählen Sie die Priorität für den Fall, der niedrig, Mittel, hoch oder kritisch sein kann.</block>
+  <block id="835eb4008e97c2a7f69bbb2725285e34" category="paragraph">Wenn Sie weitere Informationen zu diesen Prioritäten wünschen, bewegen Sie den Mauszeiger über das Informationssymbol neben dem Feldnamen.</block>
+  <block id="0f7d9319c95a8be1492e74601c4b3259" category="list-text">*Problembeschreibung*: Geben Sie eine detaillierte Beschreibung Ihres Problems an, einschließlich aller anwendbaren Fehlermeldungen oder Fehlerbehebungsschritte, die Sie durchgeführt haben.</block>
+  <block id="002c6f26fb01affb37b8cf3cef7a1fb0" category="list-text">*Zusätzliche E-Mail-Adressen*: Geben Sie zusätzliche E-Mail-Adressen ein, wenn Sie jemand anderes auf dieses Problem aufmerksam machen möchten.</block>
+  <block id="c7f5c1a75acc58c6f004efc0ce1eba09" category="list-text">*Anhang (optional)*: Laden Sie bis zu fünf Anhänge nacheinander hoch.</block>
+  <block id="bfa80e7aaad6da353b431bff3a0e12d6" category="paragraph">Anhänge sind auf 25 MB pro Datei begrenzt. Folgende Dateierweiterungen werden unterstützt: Txt, log, pdf, jpg/jpeg, rtf, doc/docx, xls/xlsx und csv.</block>
+  <block id="baaf0e61add7d12cf8d12e023d5aef18" category="inline-image-macro">Screenshot aus dem Formular „Create a Case“, in dem Sie einen Case beim NetApp Support erstellen können</block>
+  <block id="509259be6d5e15d8959f705cbe0cbcc1" category="paragraph"><block ref="509259be6d5e15d8959f705cbe0cbcc1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="18f487556417bb6d9721a7005ae097c9" category="paragraph">Es wird ein Popup-Fenster mit der Support-Fallnummer angezeigt. Ein NetApp Support-Experte prüft Ihren Fall und macht Sie umgehend mit.</block>
+  <block id="04e15da1deae9568b4dcda64fbb0c8d5" category="paragraph">Für eine Historie Ihrer Supportfälle können Sie auf *Einstellungen &gt; Timeline* klicken und nach Aktionen mit dem Namen „Support Case erstellen“ suchen. Mit einer Schaltfläche ganz rechts können Sie die Aktion erweitern, um Details anzuzeigen.</block>
+  <block id="5c56753585e89a84941bb3a78bc681af" category="paragraph">Es ist möglich, dass beim Versuch, einen Fall zu erstellen, möglicherweise die folgende Fehlermeldung angezeigt wird:</block>
+  <block id="a30f69ab0ec85d427a3e8835713525bd" category="paragraph">„Sie sind nicht berechtigt, einen Fall für den ausgewählten Service zu erstellen.“</block>
+  <block id="c7b7a5ae9f37fd7d24e4d641b9186fe9" category="paragraph">Dieser Fehler könnte bedeuten, dass das NSS-Konto und das Unternehmen des Datensatzes, mit dem es verbunden ist, nicht das gleiche Unternehmen des Eintrags für die BlueXP Account Seriennummer (dh 960xxxx) oder Seriennummer der Arbeitsumgebung. Sie können Hilfe mit einer der folgenden Optionen anfordern:</block>
+  <block id="e01df0b4dfd95eba2c59333419e4fac6" category="list-text">Verwenden Sie den Chat im Produkt</block>
+  <block id="639be990cfca56ab4b63685d8bacd437" category="list-text">Übermitteln eines nicht-technischen Cases unter<block ref="2298f47e4dad19a3156da7ce6116d9b1" category="inline-link-rx"></block></block>
+  <block id="898e35e1a4bf4b025c3edec879439b08" category="section-title">Managen Ihrer Support-Cases (Vorschau)</block>
+  <block id="8b74b053fbeeff5c3b6f4991cb1d028d" category="paragraph">Sie können aktive und gelöste Support-Cases direkt über BlueXP anzeigen und managen. Sie können die mit Ihrem NSS-Konto und Ihrem Unternehmen verbundenen Fälle verwalten.</block>
+  <block id="394ef093ad3259b9ff0fe7406f015b83" category="paragraph">Case Management ist als Vorschau verfügbar. Wir planen, diese Erfahrungen weiter zu verbessern und in zukünftigen Versionen Verbesserungen hinzuzufügen. Bitte senden Sie uns Ihr Feedback über den Product-Chat.</block>
+  <block id="5e4e7672ec2ba2b8a763da7f6714e212" category="list-text">Das Case-Management-Dashboard oben auf der Seite bietet zwei Ansichten:</block>
+  <block id="01c3ffea552d74a5ae390b10e71a1f26" category="list-text">Die Ansicht auf der linken Seite zeigt die Gesamtzahl der Fälle, die in den letzten 3 Monaten durch das von Ihnen angegebene NSS-Benutzerkonto eröffnet wurden.</block>
+  <block id="e3b6c09a5686233f72ce1ea60a1eb088" category="list-text">Die Ansicht auf der rechten Seite zeigt die Gesamtzahl der in den letzten 3 Monaten auf Unternehmensebene eröffneten Fälle basierend auf Ihrem NSS-Benutzerkonto an.</block>
+  <block id="b19b168cc8a2b8c984465e140256b3a2" category="paragraph">Die Ergebnisse in der Tabelle geben die Fälle in Bezug auf die ausgewählte Ansicht wieder.</block>
+  <block id="56dcadeee6b0e5c47a52673f9b5a0bb3" category="list-text">Sie können interessante Spalten hinzufügen oder entfernen und den Inhalt von Spalten wie Priorität und Status filtern. Andere Spalten bieten nur Sortierfunktionen.</block>
+  <block id="6f936762e1223311f031685422fcd3a4" category="paragraph">Weitere Informationen erhalten Sie in den Schritten unten.</block>
+  <block id="b14929795a61440e9b4ec9f8a4885ae3" category="list-text">Auf Fallebene bieten wir die Möglichkeit, Fallnotizen zu aktualisieren oder einen Fall zu schließen, der sich noch nicht im Status „Geschlossen“ oder „Geschlossen“ befindet.</block>
+  <block id="34b1296d31cefa72dae9b3a364b1f444" category="list-text">Klicken Sie auf *Case Management* und fügen Sie bei Aufforderung Ihr NSS-Konto zu BlueXP hinzu.</block>
+  <block id="d8ce1865cf1fe3cffd60300b4b86ad63" category="paragraph">Auf der Seite *Case Management* werden offene Fälle im Zusammenhang mit dem NSS-Konto angezeigt, das mit Ihrem BlueXP Benutzerkonto verknüpft ist. Dies ist das gleiche NSS-Konto, das oben auf der Seite *NSS Management* angezeigt wird.</block>
+  <block id="2ae5ae78bdb2d222f15fd8e89248709c" category="list-text">Ändern Sie optional die in der Tabelle angezeigten Informationen:</block>
+  <block id="27635a52fe4c34c39ffc6430f4244ec6" category="list-text">Klicken Sie unter *Organizations-Fälle* auf *Ansicht*, um alle mit Ihrem Unternehmen verbundenen Fälle anzuzeigen.</block>
+  <block id="059e856250b59be3069246887b74a23c" category="list-text">Ändern Sie den Datumsbereich, indem Sie einen genauen Datumsbereich oder einen anderen Zeitrahmen auswählen.</block>
+  <block id="dfb3764bce2548df4e06357403f9c7d0" category="inline-image-macro">Ein Screenshot der Option über der Tabelle auf der Seite Case Management, mit der Sie einen genauen Datumsbereich oder die letzten 7 Tage, 30 Tage oder 3 Monate auswählen können.</block>
+  <block id="0972db30d942fdb65d1732e6e84bde99" category="paragraph"><block ref="0972db30d942fdb65d1732e6e84bde99" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="a1bb576be9e5a356290f231efb51b3f5" category="list-text">Filtern Sie den Inhalt der Spalten.</block>
+  <block id="3753f10a59e21f58b30e3e67d416453e" category="inline-image-macro">Ein Screenshot der Filteroption in der Spalte Status, in dem Sie Fälle filtern können, die einem bestimmten Status entsprechen, z. B. aktiv oder Geschlossen.</block>
+  <block id="cb6a777dd3c6e43b0dc441d38519d219" category="paragraph"><block ref="cb6a777dd3c6e43b0dc441d38519d219" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1c6ea5ef583389e18e7d7bda70beaa71" category="inline-image-macro">Das Plus-Symbol, das in der Tabelle angezeigt wird</block>
+  <block id="0f6cac2f77150840994f84044fc1b12b" category="list-text">Ändern Sie die Spalten, die in der Tabelle angezeigt werden, indem Sie auf klicken <block ref="b574dd55d604ddb721d869a0fc302007" category="inline-image-macro-rx" type="image"></block> Und wählen Sie dann die Spalten, die Sie anzeigen möchten.</block>
+  <block id="370b44009f1b82d0b6b178bb80cc62fa" category="inline-image-macro">Ein Screenshot mit den Spalten, die Sie in der Tabelle anzeigen können.</block>
+  <block id="e65065c4fd326b9f3a1eeb9453c30d73" category="paragraph"><block ref="e65065c4fd326b9f3a1eeb9453c30d73" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="ad0ae9ea1f2e8d973a9a0f6bb169f494" category="inline-image-macro">Ein Symbol mit drei Punkten, das in der letzten Spalte der Tabelle angezeigt wird</block>
+  <block id="6ba7d68d8b3ef0f3398afb9d3ea96172" category="list-text">Managen Sie einen bestehenden Fall, indem Sie auf klicken <block ref="566c029d89e7d5421080767a37bf443e" category="inline-image-macro-rx" type="image"></block> Und eine der verfügbaren Optionen auswählen:</block>
+  <block id="6d9dd74e7709ef802d299966f7898f6b" category="list-text">*Fall anzeigen*: Vollständige Details zu einem bestimmten Fall anzeigen.</block>
+  <block id="8e6b52a532a4fbbfc98dca3ebfa5f1e6" category="list-text">*Aktennotizen aktualisieren*: Geben Sie zusätzliche Details zu Ihrem Problem an oder wählen Sie *Dateien hochladen*, um maximal fünf Dateien anzuhängen.</block>
+  <block id="f791bc685c526af8296381acff10f6a0" category="list-text">*Fall schließen*: Geben Sie Details darüber an, warum Sie den Fall schließen und klicken Sie auf *Fall schließen*.</block>
+  <block id="e93217b2f709a398ce3c0fb753beb05f" category="inline-image-macro">Ein Screenshot, der die Aktionen zeigt, die Sie nach Auswahl des Menüs in der letzten Spalte der Tabelle durchführen können.</block>
+  <block id="2ea260929e27ffcb623c8aa35689bd18" category="paragraph"><block ref="2ea260929e27ffcb623c8aa35689bd18" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="cebcc4f8fb63a87b8b3ed75359f6fe2b" category="summary">Fügen Sie vor der Installation der Open Virtual Appliance (OVA) das Zertifikat in vCenter hinzu. Die .tar-Datei enthält die OVA und die Root- und Intermediate-Zertifikate. Die Zertifikate finden Sie im Ordner Zertifikate. Die OVA-Bereitstellung wird in VMware vCenter 8.0 und höher unterstützt.</block>
+  <block id="596e6d7cbb1dd1b33baf91e428660d8d" category="doc">Open Virtual Appliance (OVA) herunterladen</block>
+  <block id="79ffbf4faa4d41e09eeadafaa6e0f3ed" category="paragraph">Fügen Sie vor der Installation der Open Virtual Appliance (OVA) das Zertifikat in vCenter hinzu. Der<block ref="58963a595c988dc6f693cb3238dc907a" prefix=" " category="inline-code"></block> Die Datei enthält die OVA- und Entrust Root- und Intermediate-Zertifikate, die Zertifikate befinden sich im Ordner Certificates. Die OVA-Bereitstellung wird in VMware vCenter 8.0 und höher unterstützt.</block>
+  <block id="710a335d5d45bb0e553c8dfc3cb5fb65" category="paragraph">Wenn die vom Zertifikat „Vertrauen“ signierte OVA nicht vertrauenswürdig ist, müssen Sie zum Beheben des Problems die folgenden Schritte ausführen.</block>
+  <block id="e4e11fb02983a1042067d773fc061af8" category="list-text">BlueXP Backup und Recovery für VMs OVA herunterladen:</block>
+  <block id="9d2169c1c2855b78a7aeaa4f42d27dc7" category="inline-link">NetApp Support Website</block>
+  <block id="8616311ff8b8fbc30493b11c288ebdb1" category="list-text">Melden Sie sich bei an<block ref="475bc6b7fc84a67aa4a3725984f65243" category="inline-link-rx"></block></block>
+  <block id="7cb834fabfa5c8527836361e4f3f2ee4" category="list-text">Wählen Sie aus der Liste der Produkte *BlueXP Backup und Recovery für VMs* aus und klicken Sie dann auf die Schaltfläche *Neueste Version herunterladen*.</block>
+  <block id="e1349765918d1ee56b3cf4abe7d1a7d8" category="list-text">Laden Sie BlueXP Backup und Recovery für VMs herunter<block ref="58963a595c988dc6f693cb3238dc907a" prefix=" " category="inline-code"></block> Datei an jedem Speicherort.</block>
+  <block id="f7fa43f6dd6c15d238137979bfafde96" category="list-text">Extrahieren Sie den Inhalt der tar-Datei. Die tar-Datei enthält den Ordner OVA und certs. Der Ordner „Zertifikaten“ enthält die Zertifikate „Stammanvertrauen“ und „Intermediate“.</block>
+  <block id="cfaf5f859f4686c2b852499357f9dc25" category="list-text">Melden Sie sich mit den vSphere Client-Anmeldeinformationen bei VMC auf AWS an.</block>
+  <block id="7100253078fe422eb855de61ba19293d" category="list-text">Navigieren Sie zu dem Menü:Administration[Zertifikate &gt; Zertifikatverwaltung].</block>
+  <block id="cb4150305fb89a3d123bd5def9035842" category="list-text">Klicken Sie neben *Trusted Root Certificates* auf *Add*.</block>
+  <block id="cae0f21a04207830bb7b0629d6cb6d8b" category="list-text">Wechseln Sie zum Ordner certs.</block>
+  <block id="d93a23c4b41c8a9962980d34d8ebb285" category="list-text">Wählen Sie Root- und Intermediate-Zertifikate anvertrauen aus.</block>
+  <block id="28f971e28dfc95cd1f45e3f3e43cb5ae" category="list-text">Installieren Sie jedes Zertifikat einzeln.</block>
+  <block id="47d335151244395fba53cdbebf56ce73" category="list-text">Die Zertifikate werden einem Panel unter Vertrauenswürdige Stammzertifikate hinzugefügt.</block>
+  <block id="f8cf0f876b8fb430444b7badd68d522a" category="paragraph">Sobald die Zertifikate installiert sind, kann OVA überprüft und bereitgestellt werden.</block>
+  <block id="ac0fcdd28a3e3090428955f626f658ae" category="paragraph">Wenn die heruntergeladene OVA nicht manipuliert wird, wird in der Spalte Publisher das vertrauenswürdige Zertifikat angezeigt.</block>
+  <block id="0bf23a34b361e04176b05c8ff9933dab" category="summary">Erfahren Sie mehr über die Neuerungen bei BlueXP Backup und Recovery für VMs.</block>
+  <block id="cbe3139b2b301e8b5cb09208b5f9c7a9" category="doc">Neuerungen bei BlueXP Backup und Recovery für VMs</block>
+  <block id="6288a6987e24eb76541c52625adf3260" category="paragraph">Erfahren Sie mehr über die Neuerungen bei BlueXP Backup und Recovery für VMs.</block>
+  <block id="cc1b4c646adefed490c7696f1ff7817f" category="section-title">13 Juli 2023</block>
+  <block id="121644fa305df0bb070aa57221c009d8" category="section-title">BlueXP Backup und Recovery für VMs 1.0 ist jetzt allgemein verfügbar</block>
+  <block id="8dafb4fe85f37b1e252552bbe0dc8770" category="paragraph">Durch BlueXP Backup und Recovery für VMs sichern Sie Daten auf Ihren Virtual Machines. Sie können Datastores auf Amazon FSX sichern und Virtual Machines an ihrem ursprünglichen Speicherort wiederherstellen.</block>
+  <block id="84258e8a50fea5298ac22726e784f700" category="paragraph">Diese Lösung wurde speziell für Virtual Machines und Datastores auf VMware Cloud on AWS und Amazon FSX for NetApp ONTAP entwickelt.</block>
+  <block id="d239c84aafe816ca8d29fe43ddfd8fc2" category="paragraph"><block ref="d239c84aafe816ca8d29fe43ddfd8fc2" category="inline-link-macro-rx"></block></block>
+  <block id="fa6a722d89c88282f71082f279d5f8ab" category="summary">Wenn Sie eine virtuelle Maschine wiederherstellen, können Sie den vorhandenen Inhalt mit der von Ihnen ausgewählten Sicherungskopie überschreiben oder eine Kopie der virtuellen Maschine erstellen.</block>
+  <block id="288451f6138b6088004689ea7006cbe9" category="doc">Stellen Sie Virtual Machines von Amazon FSX wieder her</block>
+  <block id="9560f1f6257455641b369c78c24ba389" category="list-text">Ein Backup muss vorhanden sein.</block>
+  <block id="1b7e9359902782e10a9a390de62f931b" category="paragraph">Bevor Sie die Virtual Machine wiederherstellen können, müssen Sie ein Backup der Virtual Machine mit BlueXP Backup und Recovery für VMs erstellen.</block>
+  <block id="d46b3d9b39b92f404423eb81d683ee8c" category="paragraph">Die Restore-Vorgänge können nicht erfolgreich abgeschlossen werden, wenn Snapshot Kopien der Virtual Machine vorhanden sind, die von einer anderen Software als BlueXP Backup- und Recovery-Software für VMs durchgeführt wurden.</block>
+  <block id="2e49391fc04780cd542d3abd73d378c7" category="list-text">Die Virtual Machine darf sich nicht während des Transports befinden.</block>
+  <block id="7becb12abd0b010b5f658d46a631986d" category="paragraph">Die virtuelle Maschine, die Sie wiederherstellen möchten, darf nicht im Status vMotion oder Storage vMotion sein.</block>
+  <block id="fe1a8806b2314aa86b6c78526a3a59f3" category="list-text">HA-Konfigurationsfehler.</block>
+  <block id="1d7436e341895808fe351ed607ff7409" category="paragraph">Stellen Sie sicher, dass auf dem Bildschirm vCenter ESXi Host Summary keine HA-Konfigurationsfehler angezeigt werden, bevor Sie Backups an einen anderen Ort wiederherstellen.</block>
+  <block id="da3354cf95782becd9873fd1995f3c04" category="list-text">Die Registrierung der Virtual Machine wurde aufgehoben und erneut registriert.</block>
+  <block id="082437eea99df6f02c7a41061bfdc038" category="paragraph">Bei der Wiederherstellung von Virtual Machines wird die ursprüngliche Virtual Machine aufgehoben, die Virtual Machine wird aus einer Backup-Snapshot-Kopie wiederhergestellt und die wiederhergestellte Virtual Machine mit demselben Namen und derselben Konfiguration auf demselben ESXi Server registriert. Sie müssen die virtuellen Maschinen nach der Wiederherstellung manuell zu Ressourcengruppen hinzufügen.</block>
+  <block id="3ccb545df639f8d635171ca5cad8bac1" category="list-text">Wiederherstellen von Datenspeichern</block>
+  <block id="53cfd56b3608a4ed4c03e8e0c5caae45" category="paragraph">Sie können einen Datastore nicht wiederherstellen, aber Sie können jede virtuelle Maschine im Datastore wiederherstellen.</block>
+  <block id="6d7ec4cee1b0c4e3059a9c3d8bb71046" category="list-text">VMware-Konsistenz-Snapshot-Fehler bei einer virtuellen Maschine.</block>
+  <block id="45ece8b1113e383b0e7e2917cb3d88a5" category="paragraph">Selbst wenn ein VMware Consistency Snapshot für eine Virtual Machine ausfällt, wird die Virtual Machine trotzdem gesichert. Sie können die Einheiten, die in der Backup-Kopie im Wiederherstellungsassistenten enthalten sind, anzeigen und für Wiederherstellungsvorgänge verwenden.</block>
+  <block id="a638ca591549f6494bfb64fca964731b" category="list-text">Klicken Sie in der VMware vSphere Web Client GUI auf *Menü* in der Symbolleiste, klicken Sie auf *Inventar* und wählen Sie dann *Virtuelle Maschinen und Vorlagen*.</block>
+  <block id="c22f3159395e7ce6c9a8b604106623f7" category="list-text">Klicken Sie im linken Navigatorbereich mit der rechten Maustaste auf eine *virtuelle Maschine*, wählen Sie dann *NetApp-Cloud-Sicherung* in der Dropdown-Liste aus, und wählen Sie dann *Wiederherstellen*, um den Assistenten zu starten.</block>
+  <block id="de43308fec906273acd64a6aed609cb8" category="list-text">Wählen Sie im Assistenten *Restore* auf der Seite *Select Backup* die Backup Snapshot Kopie aus, die Sie wiederherstellen möchten.</block>
+  <block id="43bf8720e765e5ec5249782941ceb574" category="paragraph">Sie können nach einem bestimmten Backup-Namen oder einem partiellen Backup-Namen suchen, oder Sie können die Backup-Liste filtern, indem Sie auf das Filtersymbol klicken und einen Datums- und Zeitbereich auswählen. Wählen Sie aus, ob Sie Backups mit VMware-Snapshots erstellen möchten, ob Sie gemountete Backups oder den Speicherort möchten. Klicken Sie auf *OK*, um zum Assistenten zurückzukehren.</block>
+  <block id="664749414cf1bca3f1fd4f2bfac452d3" category="list-text">Wählen Sie auf der Seite *Bereich auswählen* im Feld *Bereich wiederherstellen* die Option *gesamte virtuelle Maschine* aus, wählen Sie dann den Speicherort für die Wiederherstellung aus und geben Sie dann die Ziel-ESXi-Informationen ein, auf die das Backup gemountet werden soll.</block>
+  <block id="9d7f2f9bd72cb1eb66d906abadf682b1" category="paragraph">Bei der Wiederherstellung von Teilersicherungen wird die Seite *Bereich auswählen* mit dem Wiederherstellungsvorgang übersprungen.</block>
+  <block id="4a501b597bd4167c209d8bdff7aa576e" category="list-text">Aktivieren Sie das Kontrollkästchen * VM neu starten*, wenn die virtuelle Maschine nach dem Wiederherstellungsvorgang eingeschaltet werden soll.</block>
+  <block id="de179e769f37bceb37b99454fcd0fc9f" category="list-text">Wählen Sie auf der Seite *Standort auswählen* den Speicherort für den wiederhergestellten Datastore aus.</block>
+  <block id="fca1924bee8a7a6fbfd8c512efe56373" category="list-text">Überprüfen Sie die Seite *Zusammenfassung* und klicken Sie dann auf *Fertig stellen*.</block>
+  <block id="ba4e58f4bc0a74931646cad754c7a04b" category="list-text">*Optional*: Überwachen Sie den Arbeitsfortschritt, indem Sie unten im Bildschirm auf *Letzte Aufgaben* klicken.</block>
+  <block id="5fc34c96a53e88e10cd1df77a72005f4" category="list-text">Fügen Sie wiederhergestellte virtuelle Maschinen zu Ressourcengruppen hinzu.</block>
+  <block id="a1c0ec7f7265d7d6dfdfe38fee9792ba" category="paragraph">Obwohl die virtuellen Maschinen wiederhergestellt sind, werden sie nicht automatisch ihren früheren Ressourcengruppen hinzugefügt. Daher müssen Sie die wiederhergestellten virtuellen Maschinen manuell den entsprechenden Ressourcengruppen hinzufügen.</block>
+  <block id="a6fc5033cd7d2f5d0e979c35a6273cb2" category="sidebar">BlueXP Backup und Recovery für VMs ist eine eigenständige virtuelle Appliance (Open Virtual Appliance Format), die Datensicherungsservices für VMs und Datastores in VMware Cloud on AWS und Amazon FSX for NetApp ONTAP bietet.</block>
+  <block id="be11c74c1dd7f307bb80183a90dc2067" category="sidebar">Los geht's</block>
+  <block id="d371b3e46ec1452b89412f2da008cb64" category="sidebar">Erfahren Sie mehr über BlueXP Backup und Recovery für VMs</block>
+  <block id="9007a105e32d922b23d29ba0aead2fcc" category="sidebar">Laden Sie die OVA herunter</block>
+  <block id="8bb0226ce7a5cb9b16b8b08929241212" category="sidebar">BlueXP Backup und Recovery für VMs</block>
+  <block id="0a4a3719bc7519d1162060e0f0e08f8a" category="sidebar">Backup-Richtlinien erstellen</block>
+  <block id="2565487a49c72c3b5f0b1a94e3967341" category="sidebar">BlueXP Backup und Recovery für VMs – Dokumentation</block>
+  <block id="7d0ee6fed10d3d4e5c9ee496729ab519" category="sidebar">Versionshinweise</block>
+  <block id="735a77510f7427ed8e16a69ca145868b" category="sidebar">Backup von NFS-Datastores in Amazon FSX</block>
+  <block id="0adc03eac86772ad2c75c8f140be417e" category="sidebar">Wissen und Support</block>
+</blocks>

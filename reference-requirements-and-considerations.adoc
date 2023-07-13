@@ -1,0 +1,34 @@
+---
+permalink: reference-requirements-and-considerations.html 
+sidebar: sidebar 
+keywords: requirements, considerations 
+summary: Vor der Nutzung von BlueXP Backup und Recovery für VMs müssen Sie auf verschiedene Anforderungen und Überlegungen achten. 
+---
+= Anforderungen und Überlegungen
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Vor der Nutzung von BlueXP Backup und Recovery für VMs müssen Sie auf verschiedene Anforderungen und Überlegungen achten:
+
+* BlueXP Backup und Recovery für VMs wird als Linux VM implementiert, unabhängig davon, ob Sie das Plug-in zum Schutz von Daten auf Windows Systemen oder Linux Systemen verwenden.
+* Sie sollten BlueXP Backup und Recovery für VMs auf VMC auf AWS implementieren.
++
+BlueXP Backup und Recovery für VMs und VMC sollten dieselbe Zeitzone verwenden. Die Backup-Zeitpläne werden in der Zeitzone ausgeführt, in der BlueXP Backup und Recovery für VMs implementiert werden. VMC meldet Daten in der Zeitzone, in der sich der VMC befindet. Wenn sich also das Backup und Recovery von BlueXP für VMs und VMC in unterschiedlichen Zeitzonen befinden, sind die Daten im BlueXP Dashboard für Backup und Recovery für VMs möglicherweise nicht mit den Daten in den Berichten identisch.
+
+* Das Backup und Recovery von BlueXP für VMs darf nicht in einem Ordner mit einem Namen und Sonderzeichen implementiert werden.
++
+Der Ordnername darf die folgenden Sonderzeichen nicht enthalten: €!@#%^&()_+{}';.,*?"<>
+
+* Sie müssen für jede VM auf AWS eine separate, eindeutige Instanz des BlueXP Backup und Recovery für VMs implementieren und registrieren.
++
+** Jede VMC auf AWS sollte mit einer separaten Instanz von BlueXP Backup und Recovery für VMs gepaart werden.
+** Jede Instanz von BlueXP Backup und Recovery für VMs muss als separate Linux VM implementiert werden.
++
+Wenn Sie beispielsweise Backups von sechs verschiedenen Instanzen von VMC auf AWS durchführen möchten, müssen Sie sechs BlueXP Backup und Recovery für VM-Instanzen auf sechs Hosts implementieren. Jede VMC auf AWS muss mit einer einzigartigen Instanz von BlueXP Backup und Recovery für VMs gepaart sein.
+
+
+
+

@@ -1,0 +1,74 @@
+---
+permalink: task-restore-virtual-machines-from-amazon-fsx.html 
+sidebar: sidebar 
+keywords: restore, virtual machines, amazon fsx 
+summary: Wenn Sie eine virtuelle Maschine wiederherstellen, können Sie den vorhandenen Inhalt mit der von Ihnen ausgewählten Sicherungskopie überschreiben oder eine Kopie der virtuellen Maschine erstellen. 
+---
+= Stellen Sie Virtual Machines von Amazon FSX wieder her
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Wenn Sie eine virtuelle Maschine wiederherstellen, können Sie den vorhandenen Inhalt mit der von Ihnen ausgewählten Sicherungskopie überschreiben oder eine Kopie der virtuellen Maschine erstellen.
+
+.Bevor Sie beginnen
+* Ein Backup muss vorhanden sein.
++
+Bevor Sie die Virtual Machine wiederherstellen können, müssen Sie ein Backup der Virtual Machine mit BlueXP Backup und Recovery für VMs erstellen.
+
++
+[NOTE]
+====
+Die Restore-Vorgänge können nicht erfolgreich abgeschlossen werden, wenn Snapshot Kopien der Virtual Machine vorhanden sind, die von einer anderen Software als BlueXP Backup- und Recovery-Software für VMs durchgeführt wurden.
+
+====
+* Die Virtual Machine darf sich nicht während des Transports befinden.
++
+Die virtuelle Maschine, die Sie wiederherstellen möchten, darf nicht im Status vMotion oder Storage vMotion sein.
+
+* HA-Konfigurationsfehler.
++
+Stellen Sie sicher, dass auf dem Bildschirm vCenter ESXi Host Summary keine HA-Konfigurationsfehler angezeigt werden, bevor Sie Backups an einen anderen Ort wiederherstellen.
+
+
+
+.Über diese Aufgabe
+* Die Registrierung der Virtual Machine wurde aufgehoben und erneut registriert.
++
+Bei der Wiederherstellung von Virtual Machines wird die ursprüngliche Virtual Machine aufgehoben, die Virtual Machine wird aus einer Backup-Snapshot-Kopie wiederhergestellt und die wiederhergestellte Virtual Machine mit demselben Namen und derselben Konfiguration auf demselben ESXi Server registriert. Sie müssen die virtuellen Maschinen nach der Wiederherstellung manuell zu Ressourcengruppen hinzufügen.
+
+* Wiederherstellen von Datenspeichern
++
+Sie können einen Datastore nicht wiederherstellen, aber Sie können jede virtuelle Maschine im Datastore wiederherstellen.
+
+* VMware-Konsistenz-Snapshot-Fehler bei einer virtuellen Maschine.
++
+Selbst wenn ein VMware Consistency Snapshot für eine Virtual Machine ausfällt, wird die Virtual Machine trotzdem gesichert. Sie können die Einheiten, die in der Backup-Kopie im Wiederherstellungsassistenten enthalten sind, anzeigen und für Wiederherstellungsvorgänge verwenden.
+
+
+
+.Schritte
+. Klicken Sie in der VMware vSphere Web Client GUI auf *Menü* in der Symbolleiste, klicken Sie auf *Inventar* und wählen Sie dann *Virtuelle Maschinen und Vorlagen*.
+. Klicken Sie im linken Navigatorbereich mit der rechten Maustaste auf eine *virtuelle Maschine*, wählen Sie dann *NetApp-Cloud-Sicherung* in der Dropdown-Liste aus, und wählen Sie dann *Wiederherstellen*, um den Assistenten zu starten.
+. Wählen Sie im Assistenten *Restore* auf der Seite *Select Backup* die Backup Snapshot Kopie aus, die Sie wiederherstellen möchten.
++
+Sie können nach einem bestimmten Backup-Namen oder einem partiellen Backup-Namen suchen, oder Sie können die Backup-Liste filtern, indem Sie auf das Filtersymbol klicken und einen Datums- und Zeitbereich auswählen. Wählen Sie aus, ob Sie Backups mit VMware-Snapshots erstellen möchten, ob Sie gemountete Backups oder den Speicherort möchten. Klicken Sie auf *OK*, um zum Assistenten zurückzukehren.
+
+. Wählen Sie auf der Seite *Bereich auswählen* im Feld *Bereich wiederherstellen* die Option *gesamte virtuelle Maschine* aus, wählen Sie dann den Speicherort für die Wiederherstellung aus und geben Sie dann die Ziel-ESXi-Informationen ein, auf die das Backup gemountet werden soll.
++
+Bei der Wiederherstellung von Teilersicherungen wird die Seite *Bereich auswählen* mit dem Wiederherstellungsvorgang übersprungen.
+
+. Aktivieren Sie das Kontrollkästchen * VM neu starten*, wenn die virtuelle Maschine nach dem Wiederherstellungsvorgang eingeschaltet werden soll.
+. Wählen Sie auf der Seite *Standort auswählen* den Speicherort für den wiederhergestellten Datastore aus.
+. Überprüfen Sie die Seite *Zusammenfassung* und klicken Sie dann auf *Fertig stellen*.
+. *Optional*: Überwachen Sie den Arbeitsfortschritt, indem Sie unten im Bildschirm auf *Letzte Aufgaben* klicken.
+
+
+.Nachdem Sie fertig sind
+* Fügen Sie wiederhergestellte virtuelle Maschinen zu Ressourcengruppen hinzu.
++
+Obwohl die virtuellen Maschinen wiederhergestellt sind, werden sie nicht automatisch ihren früheren Ressourcengruppen hinzugefügt. Daher müssen Sie die wiederhergestellten virtuellen Maschinen manuell den entsprechenden Ressourcengruppen hinzufügen.
+
+

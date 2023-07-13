@@ -1,0 +1,125 @@
+---
+permalink: task-deploy-bluexp-backup-and-recovery-for-vms.html 
+sidebar: sidebar 
+keywords: deploy, bluexp, backup, recovery for VMs 
+summary: Zum Schutz von VMs, Datastores und applikationskonsistenten Datenbanken auf virtualisierten Maschinen müssen Sie BlueXP Backup- und Recovery-Lösungen für VMs implementieren. 
+---
+= Implementieren Sie BlueXP Backup und Recovery für VMs
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Zum Schutz von VMs, Datastores und applikationskonsistenten Datenbanken auf virtualisierten Maschinen müssen Sie BlueXP Backup- und Recovery-Lösungen für VMs implementieren.
+
+.Bevor Sie beginnen
+++++
+
+[NOTE]
+====
+Die OVA-Bereitstellung wird in VMware vCenter 8.0 und höher unterstützt.
+
+====
+* Sie müssen die Implementierungsanforderungen gelesen haben.
+* Sie müssen eine unterstützte Version von VMC auf AWS ausführen.
+* Sie müssen Ihre VMC on AWS-Umgebung konfiguriert und eingerichtet haben.
+* Sie müssen einen ESXi Host für das Backup und Recovery für VMs von BlueXP eingerichtet haben.
+* Sie müssen das BlueXP Backup und Recovery für VMs herunterladen `.tar` Datei:
+* Sie müssen über die Details zur Anmeldeauthentifizierung für Ihre VMC on AWS Instanz verfügen.
+* Sie müssen über ein Zertifikat mit gültigen öffentlichen und privaten Schlüssel-Dateien verfügen. Weitere Informationen finden Sie in den Artikeln unter Speicherzertifikatverwaltung.
+* Sie müssen alle Browser-Sessions des vSphere Clients abgemeldet und geschlossen haben und den Browser-Cache gelöscht haben, um Probleme im Browser-Cache bei der Implementierung von BlueXP Backup und Recovery für VMs zu vermeiden.
+* In vCenter müssen Sie Transport Layer Security (TLS) aktivieren. Lesen Sie die VMware-Dokumentation.
+
+
+Implementieren Sie BlueXP Backup und Recovery für VMs in derselben Zeitzone wie vCenter.
+
+.Schritte
+. Führen Sie für VMware vCenter 7.0.3 und neuere Versionen die Schritte im Abschnitt Open Virtual Appliance (OVA) herunterladen aus, um die Zertifikate in vCenter zu importieren.
+. Navigieren Sie in Ihrem Browser zu VMware vSphere vCenter.
+. Melden Sie sich auf der Seite *VMware vCenter Single Sign-On an*.
+. Klicken Sie im Navigator-Fenster mit der rechten Maustaste auf ein Inventory-Objekt, das ein gültiges übergeordnetes Objekt einer virtuellen Maschine ist, z. B. ein Rechenzentrum, Cluster oder Host, und wählen Sie *OVF-Vorlage bereitstellen* aus, um den VMware Deploy Wizard zu starten.
+. Extrahieren Sie die `.tar` Datei, die die enthält `.ova` Auf Ihrem lokalen System speichern. Geben Sie auf der Seite *Wählen Sie eine OVF-Vorlage* den Speicherort des an `.ova` In der Datei `.tar` Extrahierter Ordner.
+. Klicken Sie Auf *Weiter*.
+. Geben Sie auf der Seite *Name und Ordner* einen eindeutigen Namen für die VM oder vApp ein, und wählen Sie einen Speicherort für die Bereitstellung aus, und klicken Sie dann auf *Weiter*.
++
+In diesem Schritt wird festgelegt, wo der importiert werden soll `.ova` Datei in vCenter. Der Standardname für die VM entspricht dem Namen der ausgewählten `.ova` Datei: Wenn Sie den Standardnamen ändern, wählen Sie einen eindeutigen Namen in jedem VMC in AWS VM-Ordner aus.
+
++
+Der Standardbereitstellungs-Speicherort für die VM ist das Inventurobjekt, an dem Sie den Assistenten gestartet haben.
+
+. Wählen Sie auf der Seite *Select a Resource* die Ressource aus, auf der Sie die bereitgestellte VM-Vorlage ausführen möchten, und klicken Sie auf *Next*.
+. Überprüfen Sie auf der Seite * Details* die `.ova` Vorlagendetails und klicken Sie auf *Weiter*.
+. Aktivieren Sie auf der Seite *Lizenzvereinbarungen* das Kontrollkästchen für *Ich akzeptiere alle Lizenzvereinbarungen*.
+. Legen Sie auf der Seite * Storage auswählen* fest, wo und wie die Dateien für die bereitgestellte OVF-Vorlage gespeichert werden sollen.
++
+.. Wählen Sie das Festplattenformat für die VMDKs aus.
+.. Wählen Sie eine VM-Speicherrichtlinie aus.
++
+Diese Option ist nur verfügbar, wenn Storage-Richtlinien auf der Zielressource aktiviert sind.
+
+.. Wählen Sie einen Datenspeicher aus, um die implementierte OVA-Vorlage zu speichern.
++
+Die Konfigurationsdatei und die Dateien virtueller Laufwerke werden auf dem Datastore gespeichert.
+
++
+Wählen Sie einen Datenspeicher aus, der ausreichend groß ist, um die virtuelle Maschine oder vApp und alle zugehörigen virtuellen Festplattendateien aufzunehmen.
+
+
+
+. Gehen Sie auf der Seite *Netzwerke auswählen* wie folgt vor:
++
+.. Wählen Sie ein Quellnetzwerk aus, und ordnen Sie es einem Zielnetzwerk zu.
++
+In der Spalte Source Network werden alle Netzwerke aufgelistet, die in der OVA-Vorlage definiert sind.
+
+.. Wählen Sie im Abschnitt *IP-Zuweisungs-Einstellungen* das erforderliche IP-Protokoll aus und klicken Sie dann auf *Weiter*.
++
+BlueXP Backup und Recovery für VMs unterstützt eine einzige Netzwerkschnittstelle. Wenn Sie mehrere Netzwerkadapter benötigen, müssen Sie diese manuell einrichten.
+
+
+
+. Gehen Sie auf der Seite *Vorlage anpassen* wie folgt vor:
++
+.. Geben Sie im Abschnitt *Registrieren bei vorhandenem vCenter* den vCenter-Namen und die vCenter-Anmeldedaten der virtuellen Appliance ein.
++
+Geben Sie im Feld *vCenter username* den Benutzernamen im Format Domain\username ein.
+
+.. Geben Sie im Abschnitt *BlueXP Backup und Recovery für VM-Zugangsdaten erstellen* die lokalen Zugangsdaten ein.
++
+Geben Sie im Feld *Benutzername* den lokalen Benutzernamen ein; fügen Sie keine Domain-Details ein.
+
++
+[IMPORTANT]
+====
+Notieren Sie sich den Benutzernamen und das Kennwort, den Sie angeben. Sie müssen diese Zugangsdaten verwenden, wenn Sie die Konfiguration von BlueXP Backup und Recovery für VMs zu einem späteren Zeitpunkt ändern möchten.
+
+====
+.. Geben Sie die Anmeldeinformationen für den Benutzer von maint ein.
+.. Geben Sie unter *Setup-Netzwerkeigenschaften* den Hostnamen ein.
++
+... Geben Sie im Abschnitt * Setup IPv4 Network Properties* die Netzwerkinformationen ein, z. B. IPv4-Adresse, IPv4-Netzmaske, IPv4-Gateway, IPv4 Primary DNS, IPv4 Secondary DNS, Und IPv4-Suchdomänen.
++
+[IMPORTANT]
+====
+Sie können diese Schritte überspringen und die Einträge im Abschnitt Netzwerkeigenschaften einrichten leer lassen, wenn Sie mit DHCP als Netzwerkkonfiguration fortfahren möchten.
+
+====
+
+
+.. Wählen Sie unter *Setup Datum und Uhrzeit* die Zeitzone aus, in der sich das vCenter befindet.
+
+
+. Überprüfen Sie die Seite auf der Seite *Ready to Complete* und klicken Sie auf *Finish*.
++
+Alle Hosts müssen mit IP-Adressen konfiguriert sein (FQDN-Hostnamen werden nicht unterstützt). Der Bereitstellungsvorgang überprüft Ihre Eingaben vor der Bereitstellung nicht.
+
++
+Sie können den Fortschritt der Bereitstellung im Fenster „Letzte Aufgaben“ anzeigen, während Sie warten, bis die OVF-Import- und Bereitstellungsaufgaben abgeschlossen sind.
+
++
+Nach der erfolgreichen Bereitstellung von BlueXP Backup und Recovery für VMs wird es als Linux VM bereitgestellt, in vCenter registriert und ein VMware vSphere Client installiert.
+
+. Navigieren Sie zu der VM, auf der BlueXP Backup und Recovery für VMs bereitgestellt wurde, klicken Sie dann auf die Registerkarte *Zusammenfassung*, und klicken Sie dann auf das Feld *Einschalten*, um die virtuelle Appliance zu starten.
+. Während BlueXP Backup und Recovery für VMs eingeschaltet ist, klicken Sie mit der rechten Maustaste auf das implementierte BlueXP Backup und Recovery für VMs, wählen Sie *Gastbetriebssystem* aus und klicken Sie dann auf *VMware-Tools installieren*.
+

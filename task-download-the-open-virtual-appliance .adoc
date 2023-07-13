@@ -1,0 +1,47 @@
+---
+permalink: task-download-the-open-virtual-appliance.html 
+sidebar: sidebar 
+keywords: download, open virtual appliance 
+summary: 'Fügen Sie vor der Installation der Open Virtual Appliance (OVA) das Zertifikat in vCenter hinzu. Die .tar-Datei enthält die OVA und die Root- und Intermediate-Zertifikate. Die Zertifikate finden Sie im Ordner Zertifikate. Die OVA-Bereitstellung wird in VMware vCenter 8.0 und höher unterstützt.' 
+---
+= Open Virtual Appliance (OVA) herunterladen
+:allow-uri-read: 
+:experimental: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Fügen Sie vor der Installation der Open Virtual Appliance (OVA) das Zertifikat in vCenter hinzu. Der `.tar` Die Datei enthält die OVA- und Entrust Root- und Intermediate-Zertifikate, die Zertifikate befinden sich im Ordner Certificates. Die OVA-Bereitstellung wird in VMware vCenter 8.0 und höher unterstützt.
+
+Wenn die vom Zertifikat „Vertrauen“ signierte OVA nicht vertrauenswürdig ist, müssen Sie zum Beheben des Problems die folgenden Schritte ausführen.
+
+.Schritte
+. BlueXP Backup und Recovery für VMs OVA herunterladen:
++
+** Melden Sie sich bei an https://mysupport.netapp.com/products/index.html["NetApp Support Website"^]
+** Wählen Sie aus der Liste der Produkte *BlueXP Backup und Recovery für VMs* aus und klicken Sie dann auf die Schaltfläche *Neueste Version herunterladen*.
+** Laden Sie BlueXP Backup und Recovery für VMs herunter `.tar` Datei an jedem Speicherort.
+
+
+. Extrahieren Sie den Inhalt der tar-Datei. Die tar-Datei enthält den Ordner OVA und certs. Der Ordner „Zertifikaten“ enthält die Zertifikate „Stammanvertrauen“ und „Intermediate“.
+. Melden Sie sich mit den vSphere Client-Anmeldeinformationen bei VMC auf AWS an.
+. Navigieren Sie zu dem Menü:Administration[Zertifikate > Zertifikatverwaltung].
+. Klicken Sie neben *Trusted Root Certificates* auf *Add*.
++
+** Wechseln Sie zum Ordner certs.
+** Wählen Sie Root- und Intermediate-Zertifikate anvertrauen aus.
+** Installieren Sie jedes Zertifikat einzeln.
+
+
+. Die Zertifikate werden einem Panel unter Vertrauenswürdige Stammzertifikate hinzugefügt.
++
+Sobald die Zertifikate installiert sind, kann OVA überprüft und bereitgestellt werden.
+
+
+
+[NOTE]
+====
+Wenn die heruntergeladene OVA nicht manipuliert wird, wird in der Spalte Publisher das vertrauenswürdige Zertifikat angezeigt.
+
+====

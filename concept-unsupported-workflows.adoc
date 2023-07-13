@@ -1,0 +1,22 @@
+---
+permalink: concept-unsupported-workflows.html 
+sidebar: sidebar 
+keywords: unsupported, workflows 
+summary: Nicht unterstützte Workflows 
+---
+= Nicht unterstützte Workflows
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Die folgenden Workflows werden in BlueXP Backup und Recovery für die Versionen 1.0 von VMs nicht unterstützt:
+
+* Anschließen und Trennen von VMDKs
+* Mounten und Unmounten von Datastores
+* Wiederherstellung von Gastdateien und Ordnern
+* An alternativen Speicherort wiederherstellen
+* Fügen Sie mithilfe der Authentifizierungsmethode „Zertifikat“ ein Speichersystem hinzu
+* Fügen Sie NetApp ONTAP FlexGroup Volumes hinzu
+

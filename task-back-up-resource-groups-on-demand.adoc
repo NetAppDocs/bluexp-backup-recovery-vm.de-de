@@ -1,0 +1,36 @@
+---
+permalink: task-back-up-resource-groups-on-demand.html 
+sidebar: sidebar 
+keywords: back up, resource, groups, demand 
+summary: Backup-Vorgänge werden für alle in einer Ressourcengruppe definierten Ressourcen durchgeführt. Wenn eine Ressourcengruppe über eine Richtlinie und einen konfigurierten Zeitplan verfügt, werden die Backups automatisch gemäß dem Zeitplan durchgeführt. 
+---
+= Bei Bedarf das Sichern von Ressourcengruppen sichern
+:allow-uri-read: 
+:experimental: 
+:icons: font
+:imagesdir: ./media/
+
+
+[role="lead"]
+Backup-Vorgänge werden für alle in einer Ressourcengruppe definierten Ressourcen durchgeführt. Wenn eine Ressourcengruppe über eine Richtlinie und einen konfigurierten Zeitplan verfügt, werden die Backups automatisch gemäß dem Zeitplan durchgeführt.
+
+.Bevor Sie beginnen
+* Sie müssen eine Ressourcengruppe mit einer angehängten Richtlinie erstellt haben.
++
+[NOTE]
+====
+Starten Sie keinen On-Demand-Backup-Job, wenn bereits ein Job zum Backup von BlueXP Backup und Recovery für VMs ausgeführt wird. Verwenden Sie die Wartungskonsole, um den konfigurierten Backup-Zeitplan für die MySQL-Datenbank anzuzeigen.
+
+====
++
+.Schritte
+.. Klicken Sie im linken Navigator-Bereich der vCenter Web Client-Seite auf MENU:BlueXP Backup and Recovery for VMs[Ressourcengruppen], wählen Sie dann eine Ressourcengruppe aus und klicken Sie dann auf *Jetzt ausführen*, um die Sicherung zu starten.
++
+image:vSphere client_resource group.png[""]
+
+.. Wenn für die Ressourcengruppe mehrere Richtlinien konfiguriert sind, wählen Sie im Dialogfeld Jetzt sichern die Richtlinie aus, die Sie für diesen Backup-Vorgang verwenden möchten.
+.. Klicken Sie auf *OK*, um die Sicherung zu starten.
+.. Wenn der Stilllegung-Vorgang für eine der Virtual Machines im Backup fehlschlägt, wird das Backup mit einer Warnung abgeschlossen und als nicht konsistent für Virtual Machines markiert, selbst wenn für die ausgewählte Richtlinie die Konsistenz von Virtual Machines ausgewählt ist. In diesem Fall ist es möglich, dass einige der Virtual Machines erfolgreich stillgelegt wurden. In der Jobüberwachung zeigen die Details der ausgefallenen Virtual Machine den Stilllegen als fehlgeschlagen an.
+
+
+

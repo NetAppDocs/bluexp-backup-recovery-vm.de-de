@@ -1,0 +1,20 @@
+---
+permalink: concept-bluexp-backup-and-recovery-for-virtual-machines-on-amazon-fsx.html 
+sidebar: sidebar 
+keywords: bluexp, backup, recovery, virtual machines, amazon fsx 
+summary: 'BlueXP Backup und Recovery für VMs ist eine eigenständige virtuelle Appliance (Open Virtual Appliance Format), die Datensicherungsservices für VMs und Datastores in VMware Cloud on AWS und Amazon FSX for NetApp ONTAP bietet. Mit BlueXP Backup und Recovery für VMs können Sie Datastores sichern und Virtual Machines am Originalspeicherort wiederherstellen.' 
+---
+= BlueXP Backup und Recovery für Virtual Machines auf Amazon FSX
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+BlueXP Backup und Recovery für VMs ist eine eigenständige virtuelle Appliance (Open Virtual Appliance Format), die Datensicherungsservices für VMs und Datastores in VMware Cloud on AWS und Amazon FSX for NetApp ONTAP bietet. Mit BlueXP Backup und Recovery für VMs können Sie Datastores sichern und Virtual Machines am Originalspeicherort wiederherstellen.
+
+* Sie können auf Amazon FSX nur NFS-Datastores sichern.
+* Sie sollten ONTAP 9.10 oder höher ausführen, um NFS-Datastores zu sichern.
+* VMware Cloud verfügt über eine vordefinierte Rolle „Cloud-Admin“. Die CloudAdmin-Rolle verfügt über die erforderlichen Berechtigungen zum Erstellen und Managen von SDDC-Workloads und zugehörigen Objekten wie Storage-Richtlinien, Inhaltsbibliotheken, vSphere-Tags und Ressourcenpools.
+* Sie können VMs und VMDK an ihrem aktuellen Speicherort wiederherstellen (in-Place-Restore).
+

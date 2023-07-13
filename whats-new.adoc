@@ -1,0 +1,28 @@
+---
+permalink: whats-new.html 
+sidebar: sidebar 
+keywords: 2-node switched Cisco 92300YC cluster switch migration 
+summary: Erfahren Sie mehr über die Neuerungen bei BlueXP Backup und Recovery für VMs. 
+---
+= Neuerungen bei BlueXP Backup und Recovery für VMs
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Erfahren Sie mehr über die Neuerungen bei BlueXP Backup und Recovery für VMs.
+
+
+
+== 13 Juli 2023
+
+
+
+=== BlueXP Backup und Recovery für VMs 1.0 ist jetzt allgemein verfügbar
+
+Durch BlueXP Backup und Recovery für VMs sichern Sie Daten auf Ihren Virtual Machines. Sie können Datastores auf Amazon FSX sichern und Virtual Machines an ihrem ursprünglichen Speicherort wiederherstellen.
+
+Diese Lösung wurde speziell für Virtual Machines und Datastores auf VMware Cloud on AWS und Amazon FSX for NetApp ONTAP entwickelt.
+
+link:concept-bluexp-backup-and-recovery-for-virtual-machines-on-amazon-fsx.html["BlueXP Backup und Recovery für Virtual Machines auf Amazon FSX"]
