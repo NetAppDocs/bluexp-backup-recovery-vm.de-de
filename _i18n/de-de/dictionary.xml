@@ -89,7 +89,6 @@ Das Snapshot-Label hilft, mit dieser Richtlinie erstellte Snapshots von anderen 
   <block id="1ac228dd82997c534998d8c776a81009" category="list-text">Sie müssen über ein Zertifikat mit gültigen öffentlichen und privaten Schlüssel-Dateien verfügen. Weitere Informationen finden Sie in den Artikeln unter Speicherzertifikatverwaltung.</block>
   <block id="78dd2db401a1c567e4094c34da3d53e3" category="list-text">Sie müssen alle Browser-Sessions des vSphere Clients abgemeldet und geschlossen haben und den Browser-Cache gelöscht haben, um Probleme im Browser-Cache bei der Implementierung von BlueXP Backup und Recovery für VMs zu vermeiden.</block>
   <block id="8ba7fa3d7ed705b172a2802a36085538" category="list-text">In vCenter müssen Sie Transport Layer Security (TLS) aktivieren. Lesen Sie die VMware-Dokumentation.</block>
-  <block id="d706d30254764a674cce32eb658463b4" category="paragraph">Implementieren Sie BlueXP Backup und Recovery für VMs in derselben Zeitzone wie vCenter.</block>
   <block id="60fef4f382ecd40d07aa6f5d88accaa7" category="list-text">Führen Sie für VMware vCenter 7.0.3 und neuere Versionen die Schritte im Abschnitt Open Virtual Appliance (OVA) herunterladen aus, um die Zertifikate in vCenter zu importieren.</block>
   <block id="9e6343514537d0d6a99bafe616c5aa86" category="list-text">Navigieren Sie in Ihrem Browser zu VMware vSphere vCenter.</block>
   <block id="a5bc2dcdf45e4e981e8c5477447aa605" category="list-text">Melden Sie sich auf der Seite *VMware vCenter Single Sign-On an*.</block>
@@ -453,4 +452,8 @@ Das Snapshot-Label hilft, mit dieser Richtlinie erstellte Snapshots von anderen 
   <block id="522cbb900314aeb84eb5a961c5f94672" category="section-title">Unterstützung für Fileservices von Cloud-Providern</block>
   <block id="f6185bb12f5e53c800be8cda7fbca65b" category="paragraph">Technischen Support zu Fileservices von Cloud-Providern, zu seiner Infrastruktur oder zu beliebigen Lösungen, die den Service verwenden, finden Sie im Abschnitt „Hilfe erhalten“ in der BlueXP Dokumentation zu diesem Produkt.</block>
   <block id="3880ae5df9fdc4d0fc4a6d00a2239530" category="paragraph">Wenn Sie technischen Support für BlueXP und seine Storage-Lösungen und -Services erhalten möchten, nutzen Sie die unten beschriebenen Support-Optionen.</block>
+  <block id="f8c50cec8b281b2a3e589464e5dfba35" category="list-text">Öffnen Sie an der Konsole vmc.vmware.com die Firewall-Ports, damit die öffentliche IP des Computing-Gateways über TCP 443 mit dem vCenter im Managementnetzwerk kommunizieren kann.</block>
+  <block id="6bfaca7cf08b162bbacdc9479a2ca693" category="list-text">Auf der AWS-Konsole müssen Sie die Sicherheitsgruppe der VPC aktualisieren, auf der FSX für ONTAP ausgeführt wird, um BlueXP Backup und Recovery für VMs Zugriff auf FSX für ONTAP zu ermöglichen.</block>
+  <block id="852604ac38f959dae2ec3b3009d3fc07" category="paragraph">Zum Schutz von VMs und Datastores auf virtualisierten Maschinen müssen Sie BlueXP Backup und Recovery für VMs implementieren.</block>
+  <block id="ebfc4f565cf4b541e8d94e4baad23f9f" category="list-text">Sie müssen das Backup und Recovery von BlueXP für VMs in derselben Zeitzone wie vCenter implementieren.</block>
 </blocks>

@@ -31,4 +31,6 @@ Wenn Sie beispielsweise Backups von sechs verschiedenen Instanzen von VMC auf AW
 
 
 
+* Öffnen Sie an der Konsole vmc.vmware.com die Firewall-Ports, damit die öffentliche IP des Computing-Gateways über TCP 443 mit dem vCenter im Managementnetzwerk kommunizieren kann.
+* Auf der AWS-Konsole müssen Sie die Sicherheitsgruppe der VPC aktualisieren, auf der FSX für ONTAP ausgeführt wird, um BlueXP Backup und Recovery für VMs Zugriff auf FSX für ONTAP zu ermöglichen.
 

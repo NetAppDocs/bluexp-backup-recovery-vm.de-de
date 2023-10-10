@@ -11,7 +11,7 @@ summary: Zum Schutz von VMs, Datastores und applikationskonsistenten Datenbanken
 
 
 [role="lead"]
-Zum Schutz von VMs, Datastores und applikationskonsistenten Datenbanken auf virtualisierten Maschinen müssen Sie BlueXP Backup- und Recovery-Lösungen für VMs implementieren.
+Zum Schutz von VMs und Datastores auf virtualisierten Maschinen müssen Sie BlueXP Backup und Recovery für VMs implementieren.
 
 .Bevor Sie beginnen
 ++++
@@ -30,9 +30,8 @@ Die OVA-Bereitstellung wird in VMware vCenter 8.0 und höher unterstützt.
 * Sie müssen über ein Zertifikat mit gültigen öffentlichen und privaten Schlüssel-Dateien verfügen. Weitere Informationen finden Sie in den Artikeln unter Speicherzertifikatverwaltung.
 * Sie müssen alle Browser-Sessions des vSphere Clients abgemeldet und geschlossen haben und den Browser-Cache gelöscht haben, um Probleme im Browser-Cache bei der Implementierung von BlueXP Backup und Recovery für VMs zu vermeiden.
 * In vCenter müssen Sie Transport Layer Security (TLS) aktivieren. Lesen Sie die VMware-Dokumentation.
+* Sie müssen das Backup und Recovery von BlueXP für VMs in derselben Zeitzone wie vCenter implementieren.
 
-
-Implementieren Sie BlueXP Backup und Recovery für VMs in derselben Zeitzone wie vCenter.
 
 .Schritte
 . Führen Sie für VMware vCenter 7.0.3 und neuere Versionen die Schritte im Abschnitt Open Virtual Appliance (OVA) herunterladen aus, um die Zertifikate in vCenter zu importieren.
