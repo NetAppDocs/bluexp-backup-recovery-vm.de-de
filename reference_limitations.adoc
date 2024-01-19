@@ -1,0 +1,19 @@
+---
+permalink: reference-limitations.html 
+sidebar: sidebar 
+keywords: limitations 
+summary: Sollten Sie sich der Einschränkungen bewusst sein, bevor Sie BlueXP Backup und Recovery für VMs nutzen. 
+---
+= Bekannte Einschränkungen
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Bekannte Einschränkungen identifizieren Funktionen, die von dieser Version des Produkts nicht unterstützt werden oder nicht korrekt mit ihr zusammenarbeiten. Lesen Sie diese Einschränkungen sorgfältig durch.
+
+* BlueXP Backup und Recovery für VMs unterstützt die automatischen täglichen Backups von Amazon FSX for ONTAP nicht.
+* Die maximale Anzahl an gemounteten Datastores ist vier.
+* BlueXP Backup und Recovery für VMs zeigt zweimal den sekundären Standort an, wenn Snapshot-Sperrung aktiviert ist. Dieses Problem wurde in ONTAP 9.14.1RC1, ONTAP 9.13.1P4 - ONTAP 9.13.1P5 und ONTAP 9.12.1P8 - ONTAP 9.12.1P9 behoben.
+

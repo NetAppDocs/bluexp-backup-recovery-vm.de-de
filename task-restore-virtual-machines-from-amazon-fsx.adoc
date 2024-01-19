@@ -13,6 +13,23 @@ summary: Wenn Sie eine virtuelle Maschine wiederherstellen, können Sie den vorh
 [role="lead"]
 Wenn Sie eine virtuelle Maschine wiederherstellen, können Sie den vorhandenen Inhalt mit der von Ihnen ausgewählten Sicherungskopie überschreiben oder eine Kopie der virtuellen Maschine erstellen.
 
+Sie können VMs an folgenden Orten wiederherstellen:
+
+* Wiederherstellung am ursprünglichen Speicherort
++
+** In den ursprünglichen Datastore, der auf dem ursprünglichen ESXi-Host gemountet wird (dadurch wird die ursprüngliche VM überschrieben)
+
+
+* Wiederherstellung an einem alternativen Speicherort
++
+** Auf einem anderen Datastore, der auf dem ursprünglichen ESXi-Host gemountet wird
+** Auf den ursprünglichen Datastore, der auf einem anderen ESXi-Host gemountet wird und von demselben vCenter gemanagt wird
+** In einem anderen Datastore, der auf einem anderen ESXi-Host gemountet wird und von demselben vCenter gemanagt wird
+** Auf einem anderen Datastore, der auf einem anderen ESXi Host gemountet wird und von einem anderen vCenter im verknüpften Modus verwaltet wird
+
+
+
+
 .Bevor Sie beginnen
 * Ein Backup muss vorhanden sein.
 +
@@ -50,13 +67,16 @@ Selbst wenn ein VMware Consistency Snapshot für eine Virtual Machine ausfällt,
 
 
 .Schritte
-. Klicken Sie in der VMware vSphere Web Client GUI auf *Menü* in der Symbolleiste, klicken Sie auf *Inventar* und wählen Sie dann *Virtuelle Maschinen und Vorlagen*.
-. Klicken Sie im linken Navigatorbereich mit der rechten Maustaste auf eine *virtuelle Maschine*, wählen Sie dann *NetApp-Cloud-Sicherung* in der Dropdown-Liste aus, und wählen Sie dann *Wiederherstellen*, um den Assistenten zu starten.
+. Klicken Sie in der VMware vSphere-Client-Symbolleiste auf *Host und Cluster* und wählen Sie dann das Speichersystem aus.
+. Klicken Sie im linken Navigator-Bereich mit der rechten Maustaste auf eine *virtuelle Maschine*, wählen Sie dann *BlueXP Backup und Recovery für VMs* in der Dropdown-Liste aus, und wählen Sie dann *Wiederherstellen*, um den Assistenten zu starten.
 . Wählen Sie im Assistenten *Restore* auf der Seite *Select Backup* die Backup Snapshot Kopie aus, die Sie wiederherstellen möchten.
 +
 Sie können nach einem bestimmten Backup-Namen oder einem partiellen Backup-Namen suchen, oder Sie können die Backup-Liste filtern, indem Sie auf das Filtersymbol klicken und einen Datums- und Zeitbereich auswählen. Wählen Sie aus, ob Sie Backups mit VMware-Snapshots erstellen möchten, ob Sie gemountete Backups oder den Speicherort möchten. Klicken Sie auf *OK*, um zum Assistenten zurückzukehren.
 
-. Wählen Sie auf der Seite *Bereich auswählen* im Feld *Bereich wiederherstellen* die Option *gesamte virtuelle Maschine* aus, wählen Sie dann den Speicherort für die Wiederherstellung aus und geben Sie dann die Ziel-ESXi-Informationen ein, auf die das Backup gemountet werden soll.
+. Wählen Sie auf der Seite *Bereich auswählen* im Feld *Bereich wiederherstellen* die Option *gesamte virtuelle Maschine* aus, wählen Sie dann den Speicherort für die Wiederherstellung aus und geben Sie dann die Zielinformationen ein, auf die das Backup gemountet werden soll.
++
+Wenn im VM-Namensfeld derselbe VM-Name existiert, dann lautet das neue VM-Namensformat '<vm_name>_<timestamp>'.
+
 +
 Bei der Wiederherstellung von Teilersicherungen wird die Seite *Bereich auswählen* mit dem Wiederherstellungsvorgang übersprungen.
 
@@ -69,6 +89,6 @@ Bei der Wiederherstellung von Teilersicherungen wird die Seite *Bereich auswähl
 .Nachdem Sie fertig sind
 * Fügen Sie wiederhergestellte virtuelle Maschinen zu Ressourcengruppen hinzu.
 +
-Obwohl die virtuellen Maschinen wiederhergestellt sind, werden sie nicht automatisch ihren früheren Ressourcengruppen hinzugefügt. Daher müssen Sie die wiederhergestellten virtuellen Maschinen manuell den entsprechenden Ressourcengruppen hinzufügen.
+Stellen Sie sicher, dass die neu wiederhergestellte VM geschützt ist. Ist dies nicht der Fall, können Sie die wiederhergestellte VM manuell zu den entsprechenden Ressourcengruppen hinzufügen.
 
 

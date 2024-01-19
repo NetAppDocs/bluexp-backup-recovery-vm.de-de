@@ -1,0 +1,44 @@
+---
+permalink: task-access-rest-apis.html 
+sidebar: sidebar 
+keywords: access REST APIs, REST APIs 
+summary: Führen Sie diese Schritte aus, um auf die REST-APIs zuzugreifen. 
+---
+= Greifen Sie über die Swagger API-Webseite auf REST-APIs zu
+:allow-uri-read: 
+:icons: font
+:imagesdir: ./media/
+
+
+[role="lead"]
+REST-APIs sind über die Swagger Webseite zugänglich. Sie können auf die Swagger Webseite zugreifen, um die REST-APIs für BlueXP Backup und Recovery für VMs anzuzeigen.
+
+.Bevor Sie beginnen
+Für das Backup und Recovery von BlueXP für DIE REST-APIs von VMs müssen Sie entweder die IP-Adresse oder den Hostnamen der BlueXP Backup- und Recovery-Appliance für VMs kennen.
+
+
+NOTE: Das Plug-in unterstützt nur REST APIs zur Integration mit Applikationen anderer Anbieter. PowerShell Commandlets oder CLI werden nicht unterstützt.
+
+.Schritte
+. Geben Sie in einem Browser die URL ein, um auf die Plug-in Swagger Webseite zuzugreifen:
++
+https://<OVA_IP>/api/swagger-ui/index.html[]
+
++
+
+NOTE: Verwenden Sie nicht die folgenden Zeichen in DER REST-API-URL: +, . , % Und &.
+
++
+*Beispiel*
+
++
+Zugriff auf BlueXP Backup und Recovery für VMs REST-APIs:
+
++
+https://<OVA_IP>/api/swagger-ui/index.html[]
+
++
+Melden Sie sich mit dem vCenter-Authentifizierungsmechanismus an, um das Token zu generieren.
+
+. Klicken Sie auf einen API-Ressourcentyp, um die APIs in diesem Ressourcentyp anzuzeigen.
+

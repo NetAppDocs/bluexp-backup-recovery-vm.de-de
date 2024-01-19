@@ -1,0 +1,35 @@
+---
+permalink: task-detach-virtual-disks.html 
+sidebar: sidebar 
+keywords: mount, datastores 
+summary: Verbinden Sie eine oder mehrere VMDKs mit der VM. 
+---
+= Trennen Sie eine virtuelle Festplatte
+:allow-uri-read: 
+:experimental: 
+:icons: font
+:imagesdir: ./media/
+
+
+[role="lead"]
+Nachdem Sie ein virtuelles Laufwerk zur Wiederherstellung einzelner Dateien angeschlossen haben, können Sie das virtuelle Laufwerk von der übergeordneten VM trennen.
+
+.Schritte
+. Navigieren Sie im VMware vSphere-Client zu image:menu_icon.png[""] > *Inventar* > *Hosts und Cluster*.
+. Klicken Sie im linken Navigationsbereich mit der rechten Maustaste auf eine *virtuelle Maschine*, wählen Sie dann *BlueXP Backup und Recovery für VMs* in der Dropdown-Liste aus, und wählen Sie dann *Virtuelle Festplatte(n) trennen* aus.
+. Wählen Sie im Dialogfeld *Virtuelles Laufwerk trennen* eine oder mehrere Laufwerke aus, die Sie trennen möchten, aktivieren Sie dann das Kontrollkästchen *Ausgewählte Festplatte(n) trennen* und klicken Sie auf *Trennen*.
+. Optional: Überwachen Sie den Arbeitsfortschritt im Abschnitt * Letzte Aufgaben*.
++
+Aktualisieren Sie den Bildschirm, um aktualisierte Informationen anzuzeigen.
+
+. Stellen Sie sicher, dass das virtuelle Laufwerk getrennt ist, indem Sie Folgendes durchführen:
++
+.. Klicken Sie in der Symbolleiste auf *Menü* und wählen Sie dann in der Dropdown-Liste *VMs und Vorlagen* aus.
+.. Klicken Sie im linken Navigator-Fenster mit der rechten Maustaste auf eine VM und wählen Sie dann in der Dropdown-Liste *Einstellungen bearbeiten* aus.
+.. Erweitern Sie im Fenster *Einstellungen bearbeiten* die Liste für jede Festplatte, um die Liste der Festplattendateien anzuzeigen.
++
+Auf der Seite „Einstellungen bearbeiten“ werden die Festplatten auf der VM aufgeführt. Sie können die Details für jede Festplatte erweitern, um die Liste der verbundenen virtuellen Laufwerke anzuzeigen.
+
+
+
+

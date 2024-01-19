@@ -1,0 +1,66 @@
+---
+permalink: task-attach-vmdks-vm.html 
+sidebar: sidebar 
+keywords: mount, datastores 
+summary: Verbinden Sie eine oder mehrere VMDKs mit der VM. 
+---
+= Weisen Sie VMDKs an eine VM zu
+:allow-uri-read: 
+:experimental: 
+:icons: font
+:imagesdir: ./media/
+
+
+[role="lead"]
+Sie können eine oder mehrere VMDKs aus einem Backup an die übergeordnete VM oder an eine alternative VM auf demselben ESXi Host oder an eine alternative VM auf einem alternativen ESXi Host anschließen, der im verknüpften Modus von demselben vCenter oder einem anderen vCenter gemanagt wird.
+
+Somit ist es einfacher, eine oder mehrere einzelne Dateien von einem Laufwerk wiederherzustellen, anstatt das gesamte Laufwerk wiederherzustellen. Sie können die VMDK trennen, nachdem Sie die Dateien wiederhergestellt haben oder auf die Sie zugreifen möchten.
+
+.Über diese Aufgabe
+Sie haben die folgenden Zusatzoptionen:
+
+* Sie können virtuelle Laufwerke von einem primären oder einem sekundären Backup hinzufügen.
+* Sie können virtuelle Laufwerke an die übergeordnete VM (die gleiche VM, mit der die virtuelle Festplatte ursprünglich verknüpft war) oder an eine andere VM auf demselben ESXi-Host anschließen.
+
+
+Die folgenden Einschränkungen gelten für das Anbinden virtueller Laufwerke:
+
+* Vorgänge zum Verbinden und Trennen werden für VM-Vorlagen nicht unterstützt.
+* Wenn mehr als 15 VMDKs an einen iSCSI Controller angeschlossen sind, kann die Virtual Machine für BlueXP Backup und Recovery für VMs aufgrund der Einschränkungen von VMware keine VMDK-Einheitennummern mehr als 15 finden.
++
+Fügen Sie in diesem Fall die SCSI-Controller manuell hinzu, und versuchen Sie es erneut.
+
+* Verbinden Sie VMDKs über den Standard-SCSI-Controller und stellen Sie Wiederherstellungsvorgänge her. VMDKs, die mit einem NVME-Controller an eine VM angeschlossen sind, werden gesichert, doch für Anschluss- und Restore-Vorgänge werden sie über einen SCSI-Controller zurückverbunden.
+
+
+.Schritte
+. Navigieren Sie im VMware vSphere-Client zu image:menu_icon.png[""] > *Inventar* > *Hosts und Cluster*.
+. Klicken Sie im linken Navigationsbereich mit der rechten Maustaste auf eine *virtuelle Maschine*, wählen Sie dann *BlueXP Backup und Recovery für VMs* in der Dropdown-Liste aus, und wählen Sie dann *Virtuelle Festplatte(n)* anhängen.
+. Wählen Sie im Fenster Virtuelles Laufwerk anhängen im Abschnitt *Backup* ein Backup aus.
++
+Sie können die Sicherungsliste filtern, indem Sie das Filtersymbol auswählen und einen Datums- und Zeitbereich auswählen. Wählen Sie dann aus, ob Sie Backups mit VMware Snapshot-Kopien erstellen möchten, ob Sie Backups mounten möchten, und wählen Sie den Speicherort aus. Klicken Sie auf OK.
+
+. Wählen Sie im Abschnitt *Select Disks* ein oder mehrere Festplatten aus, die Sie verbinden möchten, und den Speicherort, an den Sie anschließen möchten (primäre oder sekundäre).
++
+Sie können den Filter so ändern, dass primäre und sekundäre Standorte angezeigt werden.
+
+. Standardmäßig sind die ausgewählten virtuellen Laufwerke an die übergeordnete VM angeschlossen. Um die ausgewählten virtuellen Laufwerke an eine alternative VM im selben ESXi-Host anzuhängen, *Klicken Sie hier, um sie an eine alternative VM anzuhängen* und geben Sie die alternative VM an.
+. Klicken Sie Auf *Anhängen*.
+. Optional: Überwachen Sie den Arbeitsfortschritt im Abschnitt * Letzte Aufgaben*.
++
+Aktualisieren Sie den Bildschirm, um aktualisierte Informationen anzuzeigen.
+
+. Stellen Sie sicher, dass das virtuelle Laufwerk angeschlossen ist, indem Sie Folgendes durchführen:
++
+.. Klicken Sie in der Symbolleiste auf *Menü* und wählen Sie dann in der Dropdown-Liste *VMs und Vorlagen* aus.
+.. Klicken Sie im linken Navigator-Fenster mit der rechten Maustaste auf eine VM und wählen Sie dann in der Dropdown-Liste *Einstellungen bearbeiten* aus.
+.. Erweitern Sie im Fenster *Einstellungen bearbeiten* die Liste für jede Festplatte, um die Liste der Festplattendateien anzuzeigen.
++
+Auf der Seite „Einstellungen bearbeiten“ werden die Festplatten auf der VM aufgeführt. Sie können die Details für jede Festplatte erweitern, um die Liste der verbundenen virtuellen Laufwerke anzuzeigen.
+
+
+
+
+
+*Ergebnis*:
+Sie können vom Host-Betriebssystem auf die angeschlossenen Laufwerke zugreifen und die erforderlichen Informationen von den Festplatten abrufen.

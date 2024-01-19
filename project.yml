@@ -12,7 +12,11 @@ sidebar:
   - title: BlueXP Backup und Recovery für VMs – Dokumentation
     url: "/index.html"
   - title: Versionshinweise
-    url: "/whats-new.html"
+    entries:
+    - title: Was ist neu
+      url: "/whats-new.html"
+    - title: Bekannte Einschränkungen
+      url: "/reference-limitations.html"
   - title: Los geht's
     entries:
     - title: Erfahren Sie mehr über BlueXP Backup und Recovery für VMs
@@ -37,8 +41,22 @@ sidebar:
       url: "/task-create-resource-groups.html"
     - title: Bei Bedarf das Sichern von Ressourcengruppen sichern
       url: "/task-back-up-resource-groups-on-demand.html"
+  - title: Mounten und Unmounten von Datastores
+    entries:
+    - title: Mounten von Datastores
+      url: "/task-mount-datastores.html"
+    - title: Heben Sie das Mounten von Datenspeichern auf
+      url: "/task-unmount-datastores.html"
+  - title: Anschließen und Trennen von VMDKs
+    entries:
+    - title: Weisen Sie VMDKs an eine VM zu
+      url: "/task-attach-vmdks-vm.html"
+    - title: Trennen Sie eine virtuelle Festplatte
+      url: "/task-detach-virtual-disks.html"
   - title: Stellen Sie Virtual Machines von Amazon FSX wieder her
     url: "/task-restore-virtual-machines-from-amazon-fsx.html"
+  - title: Zugriff auf REST-APIs
+    url: "/task-access-rest-apis.html"
   - title: Wissen und Support
     entries:
     - title: Für den Support anmelden

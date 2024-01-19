@@ -17,7 +17,7 @@ Bevor Sie das Backup und Recovery von VMs für VMs mit BlueXP nutzen, müssen Si
 * Sie müssen die Voraussetzungen gelesen haben.
 * Sie müssen sekundäre Storage-Beziehungen konfiguriert haben.
 +
-** Wenn Sie Snapshot Kopien auf einen gespiegelten oder sekundären Vault-Storage replizieren, müssen die Beziehungen konfiguriert sein. Der SnapCenter Administrator muss Ihnen die Storage-VMs sowohl für die Quell- als auch die Ziel-Volumes zugewiesen haben.
+** Wenn Sie Snapshot Kopien auf einen sekundären Spiegel- oder Vault-Speicher replizieren, müssen die Beziehungen konfiguriert und die Storage-Systeme der Quell- und Ziel-Volumes registriert werden.
 ** Um Snapshot-Kopien für Versionen-FlexibleMirror Beziehungen auf einem NFS-Datastore erfolgreich in den sekundären Storage zu übertragen, stellen Sie sicher, dass der SnapMirror-Richtlinientyp „Asynchronous Mirror“ ist und dass die Option „all_source_Snapshots“ aktiviert ist.
 ** Wenn die Anzahl der Snapshot-Kopien auf dem sekundären Storage (Mirror-Vault) das Maximum erreicht, schlägt die Aktivität zur Registrierung von Backups und Anwendung der Aufbewahrung im Backup-Vorgang mit der folgenden Fehlermeldung fehl: Diese Snapshot-Kopie wird derzeit von einer oder mehreren SnapMirror Beziehungen als Referenz-Snapshot-Kopie verwendet. Das Löschen der Snapshot Kopie kann dazu führen, dass zukünftige SnapMirror Vorgänge fehlschlagen.
 +
@@ -31,7 +31,9 @@ Um dieses Problem zu beheben, konfigurieren Sie die SnapMirror Aufbewahrungsrich
 .Schritte
 . Klicken Sie im linken Navigator-Bereich von BlueXP Backup und Recovery für VMs auf *Richtlinien*.
 . Klicken Sie auf der Seite *Policies* auf *Create*, um den Assistenten zu starten.
++
 image:vSphere client_policies.png[""]
+
 . Wählen Sie auf der Seite *New Backup Policy* den VMC auf AWS aus, der die Richtlinie verwendet, und geben Sie dann den Richtliniennamen und eine Beschreibung ein.
 +
 ** Nicht unterstützte Zeichen
@@ -40,10 +42,17 @@ Verwenden Sie nicht die folgenden Sonderzeichen in VMs, Datenspeicher, Cluster, 
 
 +
 Ein Unterstrich (_) ist zulässig.
+
++
 image:New backup policy.png[""]
 
 
 
+. Geben Sie die Frequenzeinstellungen an.
++
+Die Richtlinie gibt nur die Backup-Häufigkeit an. Der spezifische Schutzzeitplan für das Sichern ist in der Ressourcengruppe festgelegt. Daher können zwei oder mehr Ressourcengruppen dieselbe Richtlinien- und Backup-Häufigkeit teilen, jedoch unterschiedliche Backup-Pläne haben.
+
+. Wenn Sie nicht möchten, dass der Snapshot manipuliert wird, aktivieren Sie *Snapshot Locking* und geben Sie den Sperrzeitraum an.
 . Legen Sie die Aufbewahrungseinstellungen fest.
 +
 [IMPORTANT]
@@ -51,10 +60,6 @@ image:New backup policy.png[""]
 Sie sollten den Aufbewahrungswert auf 2 Backups oder höher einstellen, wenn Sie die SnapVault-Replikation aktivieren möchten. Wenn Sie die Aufbewahrungsanzahl auf 1 Backup gesetzt haben, kann der Aufbewahrungsvorgang fehlschlagen. Dies liegt daran, dass die erste Snapshot Kopie die Referenzkopie für die SnapVault-Beziehung ist, bis die neuere Snapshot Kopie auf das Ziel repliziert wird.
 
 ====
-. Geben Sie die Frequenzeinstellungen an.
-+
-Die Richtlinie gibt nur die Backup-Häufigkeit an. Der spezifische Schutzzeitplan für das Sichern ist in der Ressourcengruppe festgelegt. Daher können zwei oder mehr Ressourcengruppen dieselbe Richtlinien- und Backup-Häufigkeit teilen, jedoch unterschiedliche Backup-Pläne haben.
-
 . Geben Sie in den Feldern *Replikation* den Replikationstyp auf sekundären Speicher an, wie in der folgenden Tabelle dargestellt:
 +
 [cols="50,50"]
@@ -68,11 +73,6 @@ Aktualisierung von SnapMirror nach dem Backup
 Wählen Sie diese Option aus, um Spiegelkopien von Backup-Sets auf einem anderen Volume zu erstellen, das über eine SnapMirror Beziehung zum primären Backup Volume verfügt.
 Wenn ein Volume mit einer Mirror-Vault-Beziehung konfiguriert ist, müssen Sie nur die Option *Update SnapVault after Backup* auswählen, wenn Sie Backups auf die Mirror-Vault Ziele kopieren möchten.
 
-[NOTE]
-====
-Diese Option wird für Datastores in FlexGroup Volumes im SnapCenter Plug-in für VMware vSphere 4.5 und höher unterstützt.
-
-====
 
 
  a| 
@@ -83,11 +83,6 @@ Wählen Sie diese Option aus, um Disk-to-Disk Backup-Replikation auf einem ander
 [NOTE]
 ====
 Wenn ein Volume mit einer Mirror-Vault-Beziehung konfiguriert ist, müssen Sie nur diese Option auswählen, wenn Sie Backups auf die Mirror-Vault Ziele kopieren möchten.
-
-====
-[NOTE]
-====
-Diese Option wird für Datastores in FlexGroup Volumes im SnapCenter Plug-in für VMware vSphere 4.5 und höher unterstützt.
 
 ====
 
@@ -123,7 +118,7 @@ Sie müssen VMware Tools auf der VM ausführen, um VM-konsistente Backups durchz
 ====
 [NOTE]
 ====
-Wenn Sie das Kontrollkästchen für die Konsistenz der VM aktivieren, können Backup-Vorgänge länger dauern und mehr Speicherplatz benötigen. In diesem Szenario werden die VMs zuerst stillgelegt, dann führt VMware einen VM-konsistenten Snapshot durch, dann führt SnapCenter seinen Backup-Vorgang durch und anschließend werden die VM-Vorgänge wieder aufgenommen.
+Wenn Sie das Kontrollkästchen für die Konsistenz der VM aktivieren, können Backup-Vorgänge länger dauern und mehr Speicherplatz benötigen. In diesem Szenario werden die VMs zuerst stillgelegt. VMware führt dann einen VM-konsistenten Snapshot aus, dann führt BlueXP Backup und Recovery für VMs seinen Backup-Vorgang durch und anschließend werden die VM-Vorgänge wieder aufgenommen.
 
 ====
 Der VM-Gastspeicher ist nicht in den Konsistenz-Snapshots der VMs enthalten.
@@ -140,7 +135,7 @@ Aktivieren Sie dieses Kontrollkästchen, um alle Datenspeicher mit unabhängigen
  a| 
 Skripte
  a| 
-Geben Sie den vollständig qualifizierten Pfad des Prescript oder Postscript ein, das das SnapCenter VMware Plug-in vor oder nach dem Backup ausführen soll. Sie können beispielsweise ein Skript ausführen, um SNMP-Traps zu aktualisieren, Warnmeldungen zu automatisieren und Protokolle zu senden. Der Skriptpfad wird zum Zeitpunkt der Ausführung des Skripts validiert.
+Geben Sie den vollständig qualifizierten Pfad des Preskripts oder Postskripts ein, über den das BlueXP Backup und Recovery für VMs vor oder nach den Backup-Vorgängen ausgeführt werden soll. Sie können beispielsweise ein Skript ausführen, um SNMP-Traps zu aktualisieren, Warnmeldungen zu automatisieren und Protokolle zu senden. Der Skriptpfad wird zum Zeitpunkt der Ausführung des Skripts validiert.
 
 [NOTE]
 ====

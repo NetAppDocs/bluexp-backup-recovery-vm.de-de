@@ -1,0 +1,29 @@
+---
+permalink: task-unmount-datastores.html 
+sidebar: sidebar 
+keywords: mount, datastores 
+summary: Durch das Aufheben der Bereitstellung eines Datastore wird der Hostzugriff auf den Speicher entfernt. 
+---
+= Heben Sie das Mounten von Datenspeichern auf
+:allow-uri-read: 
+:experimental: 
+:icons: font
+:imagesdir: ./media/
+
+
+[role="lead"]
+Sie können die Bereitstellung eines Backups aufheben, wenn Sie nicht mehr auf die Dateien im Datastore zugreifen müssen.
+
+.Schritte
+. Navigieren Sie im VMware vSphere-Client zu image:menu_icon.png[""] > *Inventar* > *Lagerung*.
+. Klicken Sie im linken Navigationsbereich mit der rechten Maustaste auf einen Datastore, wählen Sie dann *BlueXP Backup and Recovery for VMs* aus der Dropdown-Liste aus, und wählen Sie dann in der sekundären Dropdown-Liste *Unmount* aus.
++
+
+NOTE: Stellen Sie sicher, dass Sie den richtigen Datastore zum Aufheben der Bereitstellung auswählen. Andernfalls können Sie Auswirkungen auf die Produktionsarbeit haben.
+
+. Wählen Sie im Dialogfeld *Unmounten Backup* einen Datastore aus, aktivieren Sie das Kontrollkästchen *Unmounten des Datastore* und klicken Sie auf *Unmounten*.
+. Optional: Um zu überprüfen, ob der Datastore nicht gemountet ist, klicken Sie in der VMware vSphere Client Toolbar auf *BlueXP Backup und Recovery für VMs*.
++
+Der Datastore, den Sie abgehängt haben, wird im Kachel *Letzte Jobaktivitäten* des Dashboards angezeigt.
+
+

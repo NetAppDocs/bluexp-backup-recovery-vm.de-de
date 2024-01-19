@@ -15,6 +15,22 @@ Erfahren Sie mehr über die Neuerungen bei BlueXP Backup und Recovery für VMs.
 
 
 
+== 18 Januar 2024
+
+
+
+=== Verbesserungen bei BlueXP Backup und Recovery für VMs
+
+Folgende Funktionen werden in BlueXP Backup und Recovery für VMs 1.1 unterstützt:
+
+* Mounten und Unmounten von Datastores
+* Anschließen und Trennen von VMDKs
+* Stellen Sie Virtual Machines an einem alternativen Speicherort wieder her
+* Aktivieren Sie die Snapshot-Sperre, um sicherzustellen, dass Snapshot Kopien vor einer festgelegten Zeit nicht manipuliert werden.
+
+
+
+
 == 13 Juli 2023
 
 

@@ -1,0 +1,36 @@
+---
+permalink: task-mount-datastores.html 
+sidebar: sidebar 
+keywords: mount, datastores 
+summary: Durch das Mounten eines Datastore kann ein Host auf den Speicher zugreifen. 
+---
+= Mounten von Datastores
+:allow-uri-read: 
+:experimental: 
+:icons: font
+:imagesdir: ./media/
+
+
+[role="lead"]
+Sie können einen Datastore aus einer Sicherung mounten, wenn Sie auf Dateien im Backup zugreifen möchten.
+
+.Bevor Sie beginnen
+* Stellen Sie sicher, dass Sie die Organisations-ID und das API-Token vom VMC-Portal kopieren und zu den VMware Cloud Services-Einstellungen hinzufügen.
+* Stellen Sie sicher, dass sich der alternative ESXi Host mit dem Speicher verbinden kann
++
+Wenn Sie auf einen alternativen ESXi-Host mounten möchten, müssen Sie sicherstellen, dass der alternative ESXi-Host eine Verbindung zum Speicher herstellen kann und dieselbe UID und GID wie der ursprüngliche Host hat.
+
+
+
+.Schritte
+. Navigieren Sie im VMware vSphere-Client zu image:menu_icon.png[""] > *Inventar* > *Lagerung*.
+. Klicken Sie im linken Navigationsbereich mit der rechten Maustaste auf einen Datastore, wählen Sie dann *BlueXP Backup and Recovery for VMs* aus der Dropdown-Liste aus, und wählen Sie dann *Mount Backup* in der sekundären Dropdown-Liste aus.
+. Wählen Sie auf der Seite *Mount Datastore* ein Backup und einen Backup-Speicherort (primär oder sekundär) aus, und klicken Sie dann auf *Mount*.
+. Optional: Um zu überprüfen, ob der Datastore gemountet ist, klicken Sie in der VMware vSphere Client Toolbar auf *BlueXP Backup und Recovery für VMs*.
++
+Der von Ihnen gemountete Datenspeicher wird im Kachel *Letzte Jobaktivitäten* des Dashboards angezeigt.
+
++
+Um zu verhindern, dass neue Snapshot Kopien beim Klonen des Volume erstellt werden, deaktivieren Sie den ONTAP-Zeitplan für das SnapVault Volume. Bereits vorhandene Snapshot Kopien werden nicht gelöscht.
+
+
