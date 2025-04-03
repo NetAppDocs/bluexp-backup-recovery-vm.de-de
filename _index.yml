@@ -1,5 +1,9 @@
 ---
 indexpage:
+  title: BlueXP Backup und Recovery für VMs – Dokumentation
+  summary: 'BlueXP Backup und Recovery für Virtual Machines auf Amazon FSX:'
+  keywords: bluexp backup and recovery for VMs documentation, Deploy, BlueXP, backup,
+    recovery, OVA, storage, Demos, tutorials
   lead: BlueXP Backup und Recovery für VMs ist eine eigenständige virtuelle Appliance
     (Open Virtual Appliance Format), die Datensicherungsservices für VMs und Datastores
     in VMware Cloud on AWS und Amazon FSX for NetApp ONTAP bietet.
@@ -31,10 +35,10 @@ indexpage:
   - title: Demos und Lernprogramme
     links:
     - title: Installieren Sie BlueXP Backup und Recovery für VMs
-      url: https://www.youtube.com/watch?v=kCuKY0fBf5U
+      url: https://www.youtube.com/watch?v=senCAisw5VQ
     - title: Backup-FSX für ONTAP-Datastores und VMs
-      url: https://www.youtube.com/watch?v=cLWOFm_3g3U
+      url: https://www.youtube.com/watch?v=NUFRkfnhQNk
     - title: Wiederherstellung von FSX für ONTAP-Datastores VMs und VMDKs
-      url: https://www.youtube.com/watch?v=RVLYP0lguxkM
+      url: https://www.youtube.com/watch?v=Wk8q-vJ3TIg
     - title: Schutz von Oracle- und MS®-SQL-Workloads
       url: https://community.netapp.com/t5/Tech-ONTAP-Blogs/Protect-Oracle-MS-SQL-workloads-using-NetApp-SnapCenter-in-VMware-Cloud-on-AWS/ba-p/449168
